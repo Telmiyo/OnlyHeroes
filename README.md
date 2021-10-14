@@ -5,23 +5,30 @@ OnlyHeroes is a very simple minigame, born as an idea in which 10 players enter 
 
 This minigame is aimed at minecraft pvp lovers. Where they will have to show their skills in different styles of pvp in a single minigame.
  
-## OBJECTIVE
+## MAIN OBJECTIVE
 
-- [ ] Different Kits 
-- [ ] Join/Leave Commands
+- [ ] Create Different Games
 - [ ] Scoreboard
-- [ ] Leader-board
 - [ ] Economy
+- [ ] Leader-board
+- [ ] Join by Signs
+
+## FUTURE OBJECTIVE
+
+- [ ] Set Personalized Kits on a Game
+- [ ] Configurable Game Config File
+- [ ] Editable Kit Config File
+- [ ] BossBar Compatibility
 
 ## COMMANDS
 
 - User - onlyheroes.user
   - join
   - leave
-  - kits
-  - money
 - Admin - onlyheroes.admin
-  - setspawn
-  - setlobby
-  - setspawnarea
+  - setlobbyspawn
+  - setplayerspawn
+  - setdetmacthspawn
+  - creategame
+  - startgame
 
