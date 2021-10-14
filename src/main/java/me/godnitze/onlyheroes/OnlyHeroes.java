@@ -1,6 +1,6 @@
 package me.godnitze.onlyheroes;
 
-import me.godnitze.onlyheroes.Commands.JoinCommand;
+import me.godnitze.onlyheroes.commands.JoinCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class OnlyHeroes extends JavaPlugin {

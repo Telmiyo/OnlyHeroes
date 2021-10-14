@@ -1,6 +1,5 @@
-package me.godnitze.onlyheroes.Commands;
+package me.godnitze.onlyheroes.commands;
 
-import me.godnitze.onlyheroes.utils.Globals;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
