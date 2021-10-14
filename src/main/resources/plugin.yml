@@ -1,0 +1,6 @@
+name: OnlyHeroes
+version: '${project.version}'
+main: me.godnitze.onlyheroes.OnlyHeroes
+api-version: 1.17
+authors: [ Godnitze ]
+description: A simple but original minigame.
