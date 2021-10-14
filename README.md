@@ -1,4 +1,5 @@
 # OnlyHeroes
+![](screenshots/logo.png)
 
 OnlyHeroes is a very simple minigame, born as an idea in which 10 players enter a game and face randomly in a 1vs1, each round consists of a different style of pvp, different kits each round. Once there are 4 people left , they will get together in a deatmach so that the winner comes out.
 
