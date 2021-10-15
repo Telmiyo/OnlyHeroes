@@ -1,7 +1,7 @@
 package me.godnitze.onlyheroes;
 
-import me.godnitze.onlyheroes.commands.JoinCommand;
 import org.bukkit.plugin.java.JavaPlugin;
+import me.godnitze.onlyheroes.CommandManager.CommandManager;
 
 public final class OnlyHeroes extends JavaPlugin {
 
@@ -11,8 +11,7 @@ public final class OnlyHeroes extends JavaPlugin {
     System.out.print("OnlyHeroes initialized correctly");
 
         //SetCommands
-    getCommand("OnlyHeroes").setExecutor(new JoinCommand());
-
+        getCommand("oh").setExecutor(new CommandManager());
     }
 
     @Override
