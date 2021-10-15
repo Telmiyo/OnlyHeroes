@@ -7,3 +7,7 @@ description: A simple but original minigame.
 commands:
   oh:
     description: Test of custom command.
+    aliases:
+      - onlyheroes
+      - onlyh
+      - oheroes
