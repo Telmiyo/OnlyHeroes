@@ -1,8 +1,9 @@
-package me.godnitze.onlyheroes.CommandManager;
+package me.godnitze.onlyheroes.Manager;
 
 
 import me.godnitze.onlyheroes.SubCommands.JoinCommand;
 import me.godnitze.onlyheroes.SubCommands.LeaveCommand;
+import me.godnitze.onlyheroes.SubCommands.StartCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,6 +20,7 @@ public class CommandManager implements CommandExecutor {
         subcommands = new ArrayList<>();
         subcommands.add(new JoinCommand());
         subcommands.add(new LeaveCommand());
+        subcommands.add(new StartCommand());
     }
 
     @Override

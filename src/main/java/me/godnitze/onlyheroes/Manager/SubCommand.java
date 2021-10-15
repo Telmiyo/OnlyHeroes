@@ -1,9 +1,8 @@
-package me.godnitze.onlyheroes.CommandManager;
+package me.godnitze.onlyheroes.Manager;
 
 import org.bukkit.entity.Player;
 
 public abstract class SubCommand {
-
     //name of the subcommand ex. /prank <subcommand> <-- that
     public abstract String getName();
 

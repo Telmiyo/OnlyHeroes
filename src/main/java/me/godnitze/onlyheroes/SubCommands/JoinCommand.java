@@ -1,6 +1,6 @@
 package me.godnitze.onlyheroes.SubCommands;
 
-import me.godnitze.onlyheroes.CommandManager.SubCommand;
+import me.godnitze.onlyheroes.Manager.SubCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -37,6 +37,8 @@ public class JoinCommand extends SubCommand {
             player.sendMessage("You did not provide a game!");
             player.sendMessage("Do it like this: /oh join <game name>");
         }
+
+        //SAVE PLAYER INV
 
     }
 }

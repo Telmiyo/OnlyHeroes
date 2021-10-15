@@ -1,9 +1,7 @@
 package me.godnitze.onlyheroes.SubCommands;
 
-import me.godnitze.onlyheroes.CommandManager.SubCommand;
-import org.bukkit.Bukkit;
+import me.godnitze.onlyheroes.Manager.SubCommand;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 public class LeaveCommand extends SubCommand {
@@ -34,6 +32,8 @@ public class LeaveCommand extends SubCommand {
         }else if(args.length == 1){
             player.sendMessage(ChatColor.AQUA + player.getDisplayName() + ChatColor.GRAY + " left the game!");
         }
+
+        //Return Player Inv
 
     }
 }
