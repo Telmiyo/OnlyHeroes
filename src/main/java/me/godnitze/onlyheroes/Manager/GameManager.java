@@ -1,15 +1,15 @@
 package me.godnitze.onlyheroes.Manager;
 
 import me.godnitze.onlyheroes.OnlyHeroes;
+import me.godnitze.onlyheroes.Tasks.GameStartCountDown;
 import org.bukkit.Bukkit;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class GameManager {
+
     private final OnlyHeroes plugin;
     public GameState gameState = GameState.LOBBY;
     public static GameManager instance;
+    private GameStartCountDown gameStartCountDown;
 
     public GameManager(OnlyHeroes plugin){
         GameManager.instance = this;
@@ -18,8 +18,8 @@ public class GameManager {
 
     public void setGameState(GameState gameState){
 
+        if(!(this.gameState == GameState.LOBBY) && (gameState == GameState.STARTING)) return;
         this.gameState = gameState;
-
 
         switch (gameState){
             case LOBBY:
@@ -30,12 +30,13 @@ public class GameManager {
                 Bukkit.broadcastMessage("Starting State");
 
                 //Timer on chat
-                startTimer();
-
+                this.gameStartCountDown = new GameStartCountDown(this);
+                this.gameStartCountDown.runTaskTimer(plugin,0,20);
 
                 break;
             case PHASE1:
                 Bukkit.broadcastMessage("Phase1 State");
+                if(this.gameStartCountDown != null) gameStartCountDown.cancel();
                 //Spawn players randomly
                 break;
             case PHASE2:
@@ -59,20 +60,6 @@ public class GameManager {
 
     public GameState getGameState(){
         return this.gameState;
-    }
-
-    int counter = 10;
-    public void startTimer(){
-        System.out.println("I am being called");
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                Bukkit.broadcastMessage("The game is starting in " + counter);
-                counter = counter - 1;
-            }
-        };
-
     }
 
     public void cleanup(){
