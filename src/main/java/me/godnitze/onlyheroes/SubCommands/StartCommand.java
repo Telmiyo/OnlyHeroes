@@ -26,9 +26,9 @@ public class StartCommand extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
 
-        if(GameManager.instance.gameState == GameState.LOBBY)
+        /*if(GameManager.instance.currentState == GameState.LOBBY)
         {
-            GameManager.instance.setGameState(GameState.STARTING);
+            GameManager.instance.setCurrentState(GameState.STARTING);
 
         }
         else
@@ -36,6 +36,6 @@ public class StartCommand extends SubCommand {
             player.sendMessage("The game already started");
 
         }
-
+*/
     }
 }

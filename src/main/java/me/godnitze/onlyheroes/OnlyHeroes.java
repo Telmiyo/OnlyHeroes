@@ -1,17 +1,19 @@
 package me.godnitze.onlyheroes;
 
-import me.godnitze.onlyheroes.Data.DataHandler;
+import me.godnitze.onlyheroes.Data.CustomConfig;
+import me.godnitze.onlyheroes.Manager.ConfigManager;
 import me.godnitze.onlyheroes.Objects.Game;
 import me.godnitze.onlyheroes.Manager.GameManager;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import me.godnitze.onlyheroes.Manager.CommandManager;
 
 public final class OnlyHeroes extends JavaPlugin {
 
-    private GameManager gameManager;
-    private CommandManager commandManager;
-    private DataHandler dataHandler;
-    private int gameLimit = 0;
+    public GameManager gameManager;
+    public CommandManager commandManager;
+    public ConfigManager configManager;
+    private boolean isSingleServerMode = false;
 
     @Override
     public void onEnable() {
@@ -21,24 +23,44 @@ public final class OnlyHeroes extends JavaPlugin {
         //initialize Managers
         this.gameManager = new GameManager(this);
         this.commandManager = new CommandManager();
-        this.dataHandler = new DataHandler(this);
+        this.configManager = new ConfigManager(this);
 
         //SetCommands
         getCommand("oh").setExecutor(commandManager);
 
         //Get Config
-        getConfig().options().copyDefaults(true);
-        getConfig().options().copyHeader(true);
-        saveDefaultConfig();
+        configManager.createFile("test");
+        configManager.printAllFilesLog();
+        if(configManager.getCustomFile("test") == null){ getLogger().warning("Test is null");}
+        configManager.getCustomFile("test").addDefault("single-server-mode", "true");
+        configManager.getCustomFile("test").addDefault("max-games", "-1");
+        configManager.getCustomFile("test").options().copyDefaults(true);
+        configManager.saveFile("test");
 
-        if(getConfig().getBoolean("single-server-mode")){
-            gameLimit = 1;
+
+        this.isSingleServerMode = configManager.getCustomFile("test").getBoolean("single-server-mode");
+
+        if (this.isSingleServerMode) { // If we're using single server
+            this.gameManager.gamesLimit = 1;
+        } else {
+            this.gameManager.gamesLimit = configManager.getCustomFile("test").getInt("max-games");
         }
-        else{
-            gameLimit = -1;
+
+        if (configManager.getCustomFile("OnlyHeroes").getConfigurationSection("games") != null) {
+            for (String gameName : configManager.getCustomFile("OnlyHeroes").getConfigurationSection("games").getKeys(false)) {
+                Game game = new Game(gameName,this);
+                boolean status = this.gameManager.registerGame(game);
+                if (!status) {
+                   // getLogger().warning("Can't load game " + gameName + "! Reached game limit for this server.");
+                }
+            }
+        } else {
+            // We can assume that no games are created
+            getLogger().warning("No games have been created. Please create one using the creation command.");
         }
 
     }
+
 
     @Override
     public void onDisable() {
@@ -48,9 +70,7 @@ public final class OnlyHeroes extends JavaPlugin {
         gameManager.cleanup();
     }
 
-    public void registerGame(Game Game){
 
-    }
 }
 
 

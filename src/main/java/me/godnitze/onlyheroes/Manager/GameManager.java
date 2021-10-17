@@ -1,65 +1,63 @@
 package me.godnitze.onlyheroes.Manager;
 
+import me.godnitze.onlyheroes.Objects.Game;
 import me.godnitze.onlyheroes.OnlyHeroes;
 import me.godnitze.onlyheroes.Tasks.GameStartCountDown;
-import org.bukkit.Bukkit;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class GameManager {
 
+    //Classes
+    public GameState currentState = GameState.LOBBY;
+
     private final OnlyHeroes plugin;
-    public GameState gameState = GameState.LOBBY;
-    public static GameManager instance;
     private GameStartCountDown gameStartCountDown;
 
+    //Properties
+    public int gamesLimit = 0;
+    public Set<Game> games = new HashSet<>();
+
     public GameManager(OnlyHeroes plugin){
-        GameManager.instance = this;
         this.plugin = plugin;
     }
 
-    public void setGameState(GameState gameState){
-
-        if(!(this.gameState == GameState.LOBBY) && (gameState == GameState.STARTING)) return;
-        this.gameState = gameState;
-
-        switch (gameState){
-            case LOBBY:
-                Bukkit.broadcastMessage("Lobby State");
-                //They cannot break selected lobby blocks.
-                break;
-            case STARTING:
-                Bukkit.broadcastMessage("Starting State");
-
-                //Timer on chat
-                this.gameStartCountDown = new GameStartCountDown(this);
-                this.gameStartCountDown.runTaskTimer(plugin,0,20);
-
-                break;
-            case PHASE1:
-                Bukkit.broadcastMessage("Phase1 State");
-                if(this.gameStartCountDown != null) gameStartCountDown.cancel();
-                //Spawn players randomly
-                break;
-            case PHASE2:
-                Bukkit.broadcastMessage("Phase2 State");
-                break;
-            case PHASE3:
-                Bukkit.broadcastMessage("Phase3 State");
-                break;
-            case DEATHMATCH:
-                Bukkit.broadcastMessage("Deathmatch State");
-                break;
-            case WON:
-                Bukkit.broadcastMessage("Won State");
-                break;
-            case RESTARTING:
-                Bukkit.broadcastMessage("Restarting State");
-                break;
-
-        }
+    public Set<Game> getGames() {
+        return games;
     }
 
-    public GameState getGameState(){
-        return this.gameState;
+    public boolean registerGame(Game game) {
+
+        if (games.size() == gamesLimit && gamesLimit != -1) { // If we're at our limit, don't add a game
+            plugin.getLogger().warning("Can't load game " + game.getDisplayName() + "! Reached game limit for this server.");
+            plugin.getLogger().warning("Game Size " + Integer.toString(games.size()));
+
+            printLog(game);
+            return false;
+        }
+
+        games.add(game);
+        printLog(game);
+        plugin.getLogger().warning(game.getDisplayName() + "added correctly");
+        return true;
+    }
+
+    public Game getGame(String gameName){
+
+        for(Game game : getGames()){
+            if(game.getDisplayName().equalsIgnoreCase(gameName)){
+                return game;
+            }
+        }
+        return null;
+    }
+
+    public void printLog(Game game){
+        plugin.getLogger().warning("GameName: " + game.getDisplayName());
+        plugin.getLogger().warning("MaxPlayers: " + Integer.toString(game.getMaxPlayers()));
+        plugin.getLogger().warning("MinPlayers: " + Integer.toString(game.getMinPlayer()));
+
     }
 
     public void cleanup(){

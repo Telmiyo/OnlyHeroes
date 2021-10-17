@@ -1,17 +1,14 @@
 package me.godnitze.onlyheroes.Tasks;
 
-import me.godnitze.onlyheroes.Manager.GameManager;
 import me.godnitze.onlyheroes.Manager.GameState;
-import org.bukkit.Bukkit;
+import me.godnitze.onlyheroes.Objects.Game;
 import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class GameStartCountDown extends BukkitRunnable {
-    private GameManager gameManager;
+    private Game game;
 
-    public GameStartCountDown(GameManager gameManager){
-        this.gameManager = gameManager;
-    }
+    public GameStartCountDown(Game game){ this.game = game; }
     private int timeLeft = 10;
 
     @Override
@@ -19,9 +16,9 @@ public class GameStartCountDown extends BukkitRunnable {
         --timeLeft;
         if(timeLeft <= 0){
             cancel();
-            gameManager.setGameState(GameState.PHASE1);
+            game.setCurrentState(GameState.PHASE1);
             return;
         }
-        Bukkit.broadcastMessage(ChatColor.YELLOW + "The Game Starts in " + timeLeft);
+        game.sendMessage(ChatColor.YELLOW + "The Game Starts in " + timeLeft);
     }
 }
