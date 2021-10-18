@@ -179,9 +179,19 @@ public class Game {
     }
 
     public void printLog(){
-        onlyHeroes.getLogger().warning("GameName: " + getDisplayName());
-        onlyHeroes.getLogger().warning("MaxPlayers: " + Integer.toString(getMaxPlayers()));
-        onlyHeroes.getLogger().warning("MinPlayers: " + Integer.toString(getMinPlayers()));
+        onlyHeroes.getLogger().info("GameName: " + getDisplayName());
+        onlyHeroes.getLogger().info("MaxPlayers: " + Integer.toString(getMaxPlayers()));
+        onlyHeroes.getLogger().info("MinPlayers: " + Integer.toString(getMinPlayers()));
 
+        onlyHeroes.getLogger().info("LobbyPoint X " +  ": "+ Double.toString(lobbyPoint.getX())
+                + " LobbyPoint Y " +  ": "+ Double.toString(lobbyPoint.getY())
+                +" LobbyPoint Z " +  ": "+ Double.toString(lobbyPoint.getZ()));
+
+        for(int i = 0;i < spawnPoints.size();++i){
+            onlyHeroes.getLogger().info("SpawnPoint X " +  ": "+ Double.toString(spawnPoints.get(i).getX())
+            + " SpawnPoint Y" +  ": "+ Double.toString(spawnPoints.get(i).getY())
+            +" SpawnPoint Z" +  ": "+ Double.toString(spawnPoints.get(i).getZ()));
+
+        }
     }
 }

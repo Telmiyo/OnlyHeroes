@@ -33,14 +33,13 @@ public class GameManager {
             plugin.getLogger().warning("Can't load game " + game.getDisplayName() + "! Reached game limit for this server.");
             plugin.getLogger().warning("Game Size " + Integer.toString(games.size()));
 
-            //printLog(game);
             return false;
         }
 
         games.add(game);
 
         plugin.getLogger().warning(game.getDisplayName() + " added correctly");
-        printLog();
+        printLog(game);
         return true;
     }
 
@@ -54,11 +53,7 @@ public class GameManager {
         return null;
     }
 
-    public void printLog(){
-       for(Game tmp : games){
-           tmp.printLog();
-       }
-    }
+    public void printLog(Game game){ game.printLog(); }
 
     public void cleanup(){
 

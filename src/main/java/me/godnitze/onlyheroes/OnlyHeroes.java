@@ -38,7 +38,7 @@ public final class OnlyHeroes extends JavaPlugin {
          gamesFile = configManager.getConfig("onlyheroes.yml");// Create Config
 
         //Add Properties
-        configManager.setData(configFile, "single-server-mode",true);
+        configManager.setData(configFile, "single-server-mode",false);
         configManager.setData(configFile, "max-games",-1);
 
         this.isSingleServerMode = configManager.getBoolean(configFile,"single-server-mode");
