@@ -49,7 +49,7 @@ public final class OnlyHeroes extends JavaPlugin {
             this.gameManager.gamesLimit = configManager.getInt(configFile,"max-games");
         }
 
-       if (gamesFile.getConfigurationSection("games") != null) {
+       /*if (gamesFile.getConfigurationSection("games") != null) {
             for (String gameName : gamesFile.getConfigurationSection("games").getKeys(false)) {
                 Game game = new Game(gameName,this);
                 boolean status = this.gameManager.registerGame(game);
@@ -60,7 +60,7 @@ public final class OnlyHeroes extends JavaPlugin {
         } else {
             // We can assume that no games are created
             getLogger().warning("No games have been created. Please create one using the creation command.");
-        }
+        }*/
 
 
 

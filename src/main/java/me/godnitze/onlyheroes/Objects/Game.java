@@ -175,12 +175,12 @@ public class Game {
         {
             if(gamePlayer.getName() == players.get(i).getName())
             {
-                gamePlayer.teleport(gamePlayer.getJoinPoint());
+                gamePlayer.teleport(players.get(i).getJoinPoint());
                 sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &c" + gamePlayer.getName() + "&c Left the game!"));
-                players.remove(i);
-                sendMessage("&a[-] &6" + gamePlayer.getName() + " &7(" + getPlayers().size() + "&a/&7" + getMaxPlayers() + ")");
-                sendMessage(Integer.toString(players.size()));
-                sendMessage(gamePlayer.getName());
+                players.remove(0);
+
+                if(players.size() > 0){ sendMessage("&a[-] &6" + gamePlayer.getName() + " &7(" + getPlayers().size() + "&a/&7" + getMaxPlayers() + ")");}
+                else{ sendMessage("&a[-] &6" + gamePlayer.getName() + " &7(0 &a/&7" + getMaxPlayers() + ")");}
 
                 return true;
             }
@@ -253,5 +253,10 @@ public class Game {
             +" SpawnPoint Z" +  ": "+ Double.toString(spawnPoints.get(i).getZ()));
 
         }
+
+    }
+
+    public void cleanUp(){
+
     }
 }

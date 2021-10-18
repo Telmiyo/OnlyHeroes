@@ -2,10 +2,7 @@ package me.godnitze.onlyheroes.Manager;
 
 
 import me.godnitze.onlyheroes.OnlyHeroes;
-import me.godnitze.onlyheroes.SubCommands.JoinCommand;
-import me.godnitze.onlyheroes.SubCommands.LeaveCommand;
-import me.godnitze.onlyheroes.SubCommands.ReloadConfig;
-import me.godnitze.onlyheroes.SubCommands.StartCommand;
+import me.godnitze.onlyheroes.SubCommands.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -27,6 +24,7 @@ public class CommandManager implements CommandExecutor {
         subcommands.add(new LeaveCommand(onlyHeroes));
         subcommands.add(new StartCommand(onlyHeroes));
         subcommands.add(new ReloadConfig());
+        subcommands.add(new CreateGame(onlyHeroes));
     }
 
     @Override
