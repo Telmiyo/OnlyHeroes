@@ -59,10 +59,10 @@ public class ConfigManager {
         try {
             fileConfiguration.load(configFile);
             customConfigs.add(fileConfiguration);
-            plugin.getLogger().warning( name + " file added correctly");
             configNames.add(name);
-
+            plugin.getLogger().warning( name + " file added correctly");
             return fileConfiguration;
+
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }

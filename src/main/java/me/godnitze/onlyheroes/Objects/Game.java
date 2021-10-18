@@ -7,7 +7,6 @@ import me.godnitze.onlyheroes.Tasks.GameStartCountDown;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.sql.Array;
 import java.util.*;
 
 public class Game {
@@ -18,7 +17,7 @@ public class Game {
     //Basic Config Options
     private String displayName;
     private int maxPlayers;
-    private int minPlayer;
+    private int minPlayers;
     private World world;
     private List<Location> spawnPoints;
     private Location lobbyPoint;
@@ -36,27 +35,29 @@ public class Game {
     public Game(String gameName, OnlyHeroes onlyHeroes){
         this.onlyHeroes = onlyHeroes;
         ConfigManager configManager = ConfigManager.getInstance();
-        FileConfiguration configFile = configManager.getConfig("OnlyHeroes");
+        FileConfiguration gamesFile = onlyHeroes.gamesFile;
 
-        this.displayName = configManager.getStringRaw(configFile,"games" +  gameName + ".displayName");
-        this.maxPlayers = configManager.getInt(configFile, "games." + gameName + ".maxPlayers");
-        this.minPlayer = configManager.getInt(configFile, ("games." + gameName + ".minPlayers"));
-        this.world = Bukkit.createWorld(new WorldCreator(configManager.getStringRaw(configFile, "games."+ gameName + ".worldName")));
+        this.displayName = gamesFile.getString("games." + gameName + ".displayName");
+        this.maxPlayers = gamesFile.getInt("games." + gameName + ".maxPlayers");
+        this.minPlayers = gamesFile.getInt("games." + gameName + ".minPlayers");
+
+        //RollbackHandler.getRollbackHandler().rollback(fileConfiguration.getString("games." + gameName + ".worldName"));
+        //this.world = Bukkit.createWorld(new WorldCreator(fileConfiguration.getString("games." + gameName + ".worldName") + "_active"));
 
         //TODO Spawn points
         try {
-            String[] values = configManager.getStringRaw( configFile, "games." + gameName + ".lobbyPoint").split(","); // [X:0, Y:0, Z:0]
+            String[] values = gamesFile.getString( "games." + gameName + ".lobbyPoint").split(","); // [X:0, Y:0, Z:0]
             double x = Double.parseDouble(values[0].split(":")[1]); // X:0 -> X, 0 -> 0
             double y = Double.parseDouble(values[1].split(":")[1]);
             double z = Double.parseDouble(values[2].split(":")[1]);
             lobbyPoint = new Location(world, x, y, z);
         } catch (Exception ex) {
-            onlyHeroes.getLogger().severe("Failed to load lobbyPoint with metadata " + configFile.getString("games." + gameName + ".lobbyPoint") + " for gameName: '" + gameName + "'. ExceptionType: " + ex);
+            onlyHeroes.getLogger().severe("Failed to load lobbyPoint with metadata " + gamesFile.getString("games." + gameName + ".lobbyPoint") + " for gameName: '" + gameName + "'. ExceptionType: " + ex);
         }
 
         this.spawnPoints = new ArrayList<>();
 
-        for (String point : configFile.getStringList("games." + gameName + ".spawnPoints")) {
+        for (String point : gamesFile.getStringList("games." + gameName + ".spawnPoints")) {
             // X:0,Y:0,Z:0
             try {
                 String[] values = point.split(","); // [X:0, Y:0, Z:0]
@@ -79,8 +80,8 @@ public class Game {
         return maxPlayers;
     }
 
-    public int getMinPlayer() {
-        return minPlayer;
+    public int getMinPlayers() {
+        return minPlayers;
     }
 
     public World getWorld() { return world; }
@@ -175,5 +176,12 @@ public class Game {
                 break;
 
         }
+    }
+
+    public void printLog(){
+        onlyHeroes.getLogger().warning("GameName: " + getDisplayName());
+        onlyHeroes.getLogger().warning("MaxPlayers: " + Integer.toString(getMaxPlayers()));
+        onlyHeroes.getLogger().warning("MinPlayers: " + Integer.toString(getMinPlayers()));
+
     }
 }

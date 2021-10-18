@@ -13,6 +13,12 @@ public final class OnlyHeroes extends JavaPlugin {
     public CommandManager commandManager;
     private boolean isSingleServerMode = false;
 
+    private ConfigManager configManager;
+
+    public FileConfiguration configFile;
+    public FileConfiguration gamesFile;
+
+
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -27,10 +33,9 @@ public final class OnlyHeroes extends JavaPlugin {
         getCommand("oh").setExecutor(commandManager);
 
         //Get Config
-        ConfigManager configManager = ConfigManager.getInstance();
-
-        FileConfiguration configFile = configManager.getConfig("config.yml");// Create Config
-        FileConfiguration gamesFile = configManager.getConfig("onlyheroes.yml");// Create Config
+         configManager = ConfigManager.getInstance();
+         configFile = configManager.getConfig("config.yml");// Create Config
+         gamesFile = configManager.getConfig("onlyheroes.yml");// Create Config
 
         //Add Properties
         configManager.setData(configFile, "single-server-mode",true);
@@ -44,7 +49,7 @@ public final class OnlyHeroes extends JavaPlugin {
             this.gameManager.gamesLimit = configManager.getInt(configFile,"max-games");
         }
 
-  /*     if (gamesFile.getConfigurationSection("games") != null) {
+       if (gamesFile.getConfigurationSection("games") != null) {
             for (String gameName : gamesFile.getConfigurationSection("games").getKeys(false)) {
                 Game game = new Game(gameName,this);
                 boolean status = this.gameManager.registerGame(game);
@@ -55,7 +60,7 @@ public final class OnlyHeroes extends JavaPlugin {
         } else {
             // We can assume that no games are created
             getLogger().warning("No games have been created. Please create one using the creation command.");
-        }*/
+        }
 
 
 

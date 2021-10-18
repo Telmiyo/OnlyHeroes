@@ -1,5 +1,5 @@
 games:
-  'Example1':
+  example:
     displayName: "Game01"
     maxPlayers: 32
     minPlayers: 24
