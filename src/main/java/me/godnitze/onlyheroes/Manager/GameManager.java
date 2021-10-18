@@ -4,7 +4,9 @@ import me.godnitze.onlyheroes.Objects.Game;
 import me.godnitze.onlyheroes.OnlyHeroes;
 import me.godnitze.onlyheroes.Tasks.GameStartCountDown;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class GameManager {
@@ -17,13 +19,13 @@ public class GameManager {
 
     //Properties
     public int gamesLimit = 0;
-    public Set<Game> games = new HashSet<>();
+    public List<Game> games = new ArrayList<>();
 
     public GameManager(OnlyHeroes plugin){
         this.plugin = plugin;
     }
 
-    public Set<Game> getGames() {
+    public List<Game> getGames() {
         return games;
     }
 

@@ -4,8 +4,10 @@ import me.godnitze.onlyheroes.Manager.ConfigManager;
 import me.godnitze.onlyheroes.Manager.GameState;
 import me.godnitze.onlyheroes.OnlyHeroes;
 import me.godnitze.onlyheroes.Tasks.GameStartCountDown;
+import me.godnitze.onlyheroes.utils.ChatUtil;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -42,7 +44,7 @@ public class Game {
         this.minPlayers = gamesFile.getInt("games." + gameName + ".minPlayers");
 
         //RollbackHandler.getRollbackHandler().rollback(fileConfiguration.getString("games." + gameName + ".worldName"));
-        //this.world = Bukkit.createWorld(new WorldCreator(fileConfiguration.getString("games." + gameName + ".worldName") + "_active"));
+        this.world = Bukkit.createWorld(new WorldCreator(gamesFile.getString("games." + gameName + ".worldName") + "_active"));
 
         //TODO Spawn points
         try {
@@ -104,19 +106,57 @@ public class Game {
 
     public boolean isState(GameState gameState){ return getCurrentState() == gameState; }
 
-    public boolean joinGame(GamePlayer gamePlayer, Game game){
+    public boolean startGame(GamePlayer gamePlayer){
+
+        if(!isState(GameState.LOBBY))
+        {
+            gamePlayer.setGameId("Game already started");
+            return false;
+        }
+
+        for(int i = 0;i < players.size();++i)
+        {
+            if(gamePlayer.getName() == players.get(i).getName())
+            {
+                setCurrentState(GameState.STARTING);
+                return true;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean joinGame(GamePlayer gamePlayer, Game game, Player player){
+
+        if(!isState(GameState.LOBBY))
+        {
+            gamePlayer.sendMessage("Game already started");
+            return false;
+        }
+
+        for(int i = 0;i < players.size();++i)
+        {
+            if(gamePlayer.getName() == players.get(i).getName())
+            {
+                gamePlayer.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &cYou already joined"));
+                return false;
+            }
+        }
 
         if(getPlayers().size() >= getMaxPlayers()) {
             gamePlayer.sendMessage("&c[!] This game is full.");
             return false;
         }
 
+        gamePlayer.setJoinPoint(new Location(player.getWorld(),player.getLocation().getX(),player.getLocation().getY(),player.getLocation().getZ()));
+
+
         getPlayers().add(gamePlayer);
         gamePlayer.teleport(isState(GameState.LOBBY) ? lobbyPoint : null); //If the game is Lobby go to lobbypoint otherwise nothing
         sendMessage("&a[+] &6" + gamePlayer.getName() + " &7(" + getPlayers().size() + "&a/&7" + getMaxPlayers() + ")");
 
         //TODO SAVE INVENTORY
-        gamePlayer.getPlayer().setGameMode(GameMode.ADVENTURE);
+        gamePlayer.getPlayer().setGameMode(GameMode.CREATIVE);
         //gamePlayer.getPlayer().setGameMode(gamePlayer.getPlayer().getMaxHealth());
         gamePlayer.getPlayer().getInventory().setArmorContents(null);
 
@@ -127,7 +167,27 @@ public class Game {
 
         }
 
-        return false;
+        return true;
+    }
+
+    public boolean leaveGame(GamePlayer gamePlayer, Game game){
+        for(int i = 0;i < players.size();++i)
+        {
+            if(gamePlayer.getName() == players.get(i).getName())
+            {
+                gamePlayer.teleport(gamePlayer.getJoinPoint());
+                sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &c" + gamePlayer.getName() + "&c Left the game!"));
+                players.remove(i);
+                sendMessage("&a[-] &6" + gamePlayer.getName() + " &7(" + getPlayers().size() + "&a/&7" + getMaxPlayers() + ")");
+                sendMessage(Integer.toString(players.size()));
+                sendMessage(gamePlayer.getName());
+
+                return true;
+            }
+        }
+        sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &cYou are not in any game"));
+
+        return true;
     }
 
     public void sendMessage(String string) {

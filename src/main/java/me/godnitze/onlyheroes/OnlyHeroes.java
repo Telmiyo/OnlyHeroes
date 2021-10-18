@@ -26,7 +26,7 @@ public final class OnlyHeroes extends JavaPlugin {
 
         //initialize Managers
         this.gameManager = new GameManager(this);
-        this.commandManager = new CommandManager();
+        this.commandManager = new CommandManager(this);
         ConfigManager.getInstance().setPlugin(this);
 
         //SetCommands

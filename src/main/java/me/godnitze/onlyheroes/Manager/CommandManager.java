@@ -1,8 +1,10 @@
 package me.godnitze.onlyheroes.Manager;
 
 
+import me.godnitze.onlyheroes.OnlyHeroes;
 import me.godnitze.onlyheroes.SubCommands.JoinCommand;
 import me.godnitze.onlyheroes.SubCommands.LeaveCommand;
+import me.godnitze.onlyheroes.SubCommands.ReloadConfig;
 import me.godnitze.onlyheroes.SubCommands.StartCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -15,12 +17,16 @@ import java.util.ArrayList;
 public class CommandManager implements CommandExecutor {
 
     private ArrayList<SubCommand> subcommands;
+    private OnlyHeroes onlyHeroes;
 
-    public CommandManager(){
+    public CommandManager(OnlyHeroes onlyHeroes){
+        this.onlyHeroes = onlyHeroes;
+
         subcommands = new ArrayList<>();
-        subcommands.add(new JoinCommand());
-        subcommands.add(new LeaveCommand());
-        subcommands.add(new StartCommand());
+        subcommands.add(new JoinCommand(onlyHeroes));
+        subcommands.add(new LeaveCommand(onlyHeroes));
+        subcommands.add(new StartCommand(onlyHeroes));
+        subcommands.add(new ReloadConfig());
     }
 
     @Override

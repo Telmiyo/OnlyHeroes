@@ -3,8 +3,8 @@ games:
     displayName: "Game01"
     maxPlayers: 32
     minPlayers: 24
-    worldName: "example"
-    lobbyPoint: "X:400, Y:65, Z:187"
+    worldName: "world"
+    lobbyPoint: "X:0, Y:0, Z:5"
     spawnPoints:
       - "X:399, Y:62, Z:236"
       - "X:430, Y:68, Z:216"
