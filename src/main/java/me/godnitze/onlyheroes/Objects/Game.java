@@ -1,5 +1,6 @@
 package me.godnitze.onlyheroes.Objects;
 
+import me.godnitze.onlyheroes.Manager.ConfigManager;
 import me.godnitze.onlyheroes.Manager.GameState;
 import me.godnitze.onlyheroes.OnlyHeroes;
 import me.godnitze.onlyheroes.Tasks.GameStartCountDown;
@@ -34,27 +35,28 @@ public class Game {
     //Constructor
     public Game(String gameName, OnlyHeroes onlyHeroes){
         this.onlyHeroes = onlyHeroes;
-        onlyHeroes.configManager.createFile("OnlyHeroes");
+        ConfigManager configManager = ConfigManager.getInstance();
+        FileConfiguration configFile = configManager.getConfig("OnlyHeroes");
 
-        this.displayName = onlyHeroes.configManager.getCustomFile("OnlyHeroes").getString("games" +  gameName + ".displayName" );
-        this.maxPlayers = onlyHeroes.configManager.getCustomFile("OnlyHeroes").getInt("games." + gameName + ".maxPlayers");
-        this.minPlayer = onlyHeroes.configManager.getCustomFile("OnlyHeroes").getInt(("games." + gameName + ".minPlayers"));
-        this.world = Bukkit.createWorld(new WorldCreator(onlyHeroes.configManager.getCustomFile("OnlyHeroes").getString("games."+ gameName + ".worldName")));
+        this.displayName = configManager.getStringRaw(configFile,"games" +  gameName + ".displayName");
+        this.maxPlayers = configManager.getInt(configFile, "games." + gameName + ".maxPlayers");
+        this.minPlayer = configManager.getInt(configFile, ("games." + gameName + ".minPlayers"));
+        this.world = Bukkit.createWorld(new WorldCreator(configManager.getStringRaw(configFile, "games."+ gameName + ".worldName")));
 
         //TODO Spawn points
         try {
-            String[] values = onlyHeroes.configManager.getCustomFile("OnlyHeroes").getString("games." + gameName + ".lobbyPoint").split(","); // [X:0, Y:0, Z:0]
+            String[] values = configManager.getStringRaw( configFile, "games." + gameName + ".lobbyPoint").split(","); // [X:0, Y:0, Z:0]
             double x = Double.parseDouble(values[0].split(":")[1]); // X:0 -> X, 0 -> 0
             double y = Double.parseDouble(values[1].split(":")[1]);
             double z = Double.parseDouble(values[2].split(":")[1]);
             lobbyPoint = new Location(world, x, y, z);
         } catch (Exception ex) {
-            onlyHeroes.getLogger().severe("Failed to load lobbyPoint with metadata " + onlyHeroes.configManager.getCustomFile("OnlyHeroes").getString("games." + gameName + ".lobbyPoint") + " for gameName: '" + gameName + "'. ExceptionType: " + ex);
+            onlyHeroes.getLogger().severe("Failed to load lobbyPoint with metadata " + configFile.getString("games." + gameName + ".lobbyPoint") + " for gameName: '" + gameName + "'. ExceptionType: " + ex);
         }
 
         this.spawnPoints = new ArrayList<>();
 
-        for (String point : onlyHeroes.configManager.getCustomFile("OnlyHeroes").getStringList("games." + gameName + ".spawnPoints")) {
+        for (String point : configFile.getStringList("games." + gameName + ".spawnPoints")) {
             // X:0,Y:0,Z:0
             try {
                 String[] values = point.split(","); // [X:0, Y:0, Z:0]
