@@ -1,6 +1,7 @@
 package me.godnitze.onlyheroes;
 
 import me.godnitze.onlyheroes.Listeners.BlockInteract;
+import me.godnitze.onlyheroes.Listeners.PlayerMove;
 import me.godnitze.onlyheroes.Manager.ConfigManager;
 import me.godnitze.onlyheroes.Objects.Game;
 import me.godnitze.onlyheroes.Manager.GameManager;
@@ -30,6 +31,10 @@ public final class OnlyHeroes extends JavaPlugin {
         this.commandManager = new CommandManager(this);
         ConfigManager.getInstance().setPlugin(this);
 
+        //Initialize Listeners
+        getServer().getPluginManager().registerEvents(new BlockInteract(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerMove(this), this);
+
         //SetCommands
         getCommand("oh").setExecutor(commandManager);
 
@@ -49,7 +54,8 @@ public final class OnlyHeroes extends JavaPlugin {
         } else {
             this.gameManager.gamesLimit = configManager.getInt(configFile,"max-games");
         }
-        getServer().getPluginManager().registerEvents(new BlockInteract(this), this);
+
+
 
 
 

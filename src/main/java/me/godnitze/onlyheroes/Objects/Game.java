@@ -31,7 +31,7 @@ public class Game {
     //STATES
     public GameState currentState = GameState.LOBBY;
     private GameStartCountDown gameStartCountDown;
-
+    private boolean movementFrozen = false;
 
     //Constructor
     public Game(String gameName, OnlyHeroes onlyHeroes){
@@ -58,9 +58,10 @@ public class Game {
         }
 
         this.spawnPoints = new ArrayList<>();
-        int id = 0;
-        for (String point : gamesFile.getStringList("games." + gameName + ".spawnPoints" + "." + id)) {
-            // X:0,Y:0,Z:0
+
+        String point = null;
+        for(int id = 0; id < getMaxPlayers(); ++id){
+            point = gamesFile.getString("games." + gameName + ".spawnPoints" + "." + id);
             try {
                 String[] values = point.split(","); // [X:0, Y:0, Z:0]
                 double x = Double.parseDouble(values[0].split(":")[1]); // X:0 -> X, 0 -> 0
@@ -69,7 +70,7 @@ public class Game {
                 Location location = new Location(world, x, y, z);
                 spawnPoints.add(location);
             } catch (Exception ex) {
-               onlyHeroes.getLogger().severe("Failed to load spawnPoint with metadata " + point + " for gameName: '" + gameName + "'. ExceptionType: " + ex);
+                onlyHeroes.getLogger().severe("Failed to load spawnPoint with metadata " + point + " for gameName: '" + gameName + "'. ExceptionType: " + ex);
             }
         }
 
@@ -105,6 +106,10 @@ public class Game {
     public GameState getCurrentState(){
         return this.currentState;
     }
+
+    public boolean isMovementFrozen() { return movementFrozen; }
+
+    public void setMovementFrozen(boolean movementFrozen) { this.movementFrozen = movementFrozen; }
 
     public boolean isState(GameState gameState){ return getCurrentState() == gameState; }
 
@@ -201,16 +206,21 @@ public class Game {
                 break;
             case STARTING:
                 Bukkit.broadcastMessage("Starting State");
-
                 //Timer on chat
                 this.gameStartCountDown = new GameStartCountDown(this);
-                this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20);
+                this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
 
                 break;
             case PHASE1:
                 Bukkit.broadcastMessage("Phase1 State");
                 if(this.gameStartCountDown != null) gameStartCountDown.cancel();
                 //Spawn players randomly
+                 spawnPlayers();
+
+                 //Start CountDown
+                this.gameStartCountDown = new GameStartCountDown(this);
+                this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
+
                 break;
             case PHASE2:
                 Bukkit.broadcastMessage("Phase2 State");
@@ -231,6 +241,21 @@ public class Game {
         }
     }
 
+    public void spawnPlayers(){
+
+        int id = 0;
+        for (GamePlayer gamePlayer : getPlayers()) {
+            try {
+                gamePlayer.teleport(spawnPoints.get(id));
+                id += 1;
+                //gamePlayer.getPlayer().setGameMode(GameMode.SURVIVAL);
+
+            } catch (IndexOutOfBoundsException ex) {
+                onlyHeroes.getLogger().severe("Not enough spawn points to satisfy game needs (Game is " + getDisplayName() + ")");
+            }
+        }
+    }
+
     public void printLog(){
         onlyHeroes.getLogger().info("GameName: " + getDisplayName());
         onlyHeroes.getLogger().info("MaxPlayers: " + Integer.toString(getMaxPlayers()));
@@ -240,7 +265,7 @@ public class Game {
                 + " LobbyPoint Y " +  ": "+ Double.toString(lobbyPoint.getY())
                 +" LobbyPoint Z " +  ": "+ Double.toString(lobbyPoint.getZ()));
 
-        for(int i = 0;i < spawnPoints.size();++i){
+        for(int i = 0;i < spawnPoints.size() - 1;++i){
             onlyHeroes.getLogger().info("SpawnPoint X " +  ": "+ Double.toString(spawnPoints.get(i).getX())
             + " SpawnPoint Y" +  ": "+ Double.toString(spawnPoints.get(i).getY())
             +" SpawnPoint Z" +  ": "+ Double.toString(spawnPoints.get(i).getZ()));
