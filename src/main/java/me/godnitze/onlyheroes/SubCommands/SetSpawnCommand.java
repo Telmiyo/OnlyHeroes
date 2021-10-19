@@ -33,6 +33,17 @@ public class SetSpawnCommand extends SubCommand {
 
         if(args.length == 3){
             //TODO
+            if(onlyHeroes.gameManager.getGame(args[1]) == null)
+            {
+                player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &c You need to create the game first! "));
+                return;
+            }
+            if(onlyHeroes.gameManager.getGame(args[1]).getMaxPlayers() < Integer.parseInt(args[2]))
+            {
+                player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &cYou can set a maximun of " + onlyHeroes.gameManager.getGame(args[1]).getMaxPlayers() + " spawns in this game!") );
+                return;
+            }
+
             ConfigManager configManager = ConfigManager.getInstance();
             FileConfiguration gamesFile = onlyHeroes.gamesFile;
             Location tmpLoc = player.getLocation();

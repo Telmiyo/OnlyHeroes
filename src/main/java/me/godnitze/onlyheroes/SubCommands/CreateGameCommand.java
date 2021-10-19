@@ -49,12 +49,22 @@ public class CreateGameCommand extends SubCommand {
             configManager.setData(gamesFile, "games." + args[1] + ".worldName", args[4]);
             configManager.setData(gamesFile, "games." + args[1] + ".lobbyPoint", "X:0, Y:0, Z:0");
 
-            for(int i = 0; i <= Integer.parseInt(args[3]); ++i){
+            for(int i = 0; i <= Integer.parseInt(args[3]) - 1; ++i){
                 configManager.setData(gamesFile, "games." + args[1] + ".spawnPoints" + "." + i, "X:0, Y:0, Z:0");
             }
 
-            player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &a successfully created the game " + args[1]));
+            if(onlyHeroes.gameManager.getGame(args[1]) != null){
+                onlyHeroes.gameManager.removeGame(onlyHeroes.gameManager.getGame(args[1]));
+            }
+            Game game = new Game(args[1],onlyHeroes);
+            boolean status = onlyHeroes.gameManager.registerGame(game);
+            if (!status) {
+                onlyHeroes.getLogger().warning("Can't load game " + args[1] + "! Reached game limit for this server.");
+            }
+            else{
+                player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &a successfully created the game " + args[1]));
 
+            }
 
         }
         else{

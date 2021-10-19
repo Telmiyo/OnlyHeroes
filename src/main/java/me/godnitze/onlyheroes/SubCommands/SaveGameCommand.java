@@ -33,6 +33,7 @@ public class SaveGameCommand extends SubCommand {
 
         if(args.length == 2){
             //TODO
+
             if(onlyHeroes.gameManager.getGame(args[1]) != null){
                 onlyHeroes.gameManager.removeGame(onlyHeroes.gameManager.getGame(args[1]));
             }

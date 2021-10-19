@@ -1,5 +1,6 @@
 package me.godnitze.onlyheroes;
 
+import me.godnitze.onlyheroes.Listeners.AvoidDamage;
 import me.godnitze.onlyheroes.Listeners.BlockInteract;
 import me.godnitze.onlyheroes.Listeners.PlayerMove;
 import me.godnitze.onlyheroes.Manager.ConfigManager;
@@ -34,6 +35,7 @@ public final class OnlyHeroes extends JavaPlugin {
         //Initialize Listeners
         getServer().getPluginManager().registerEvents(new BlockInteract(this), this);
         getServer().getPluginManager().registerEvents(new PlayerMove(this), this);
+        getServer().getPluginManager().registerEvents(new AvoidDamage(this), this);
 
         //SetCommands
         getCommand("oh").setExecutor(commandManager);

@@ -31,6 +31,13 @@ public class SetLobbyCommand extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         if(args.length == 2){
+
+            if(onlyHeroes.gameManager.getGame(args[1]) == null)
+            {
+                player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &c You need to create the game first! "));
+                return;
+            }
+
             ConfigManager configManager = ConfigManager.getInstance();
             FileConfiguration gamesFile = onlyHeroes.gamesFile;
             Location tmpLoc = player.getLocation();
