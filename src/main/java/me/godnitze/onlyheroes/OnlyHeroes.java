@@ -1,5 +1,6 @@
 package me.godnitze.onlyheroes;
 
+import me.godnitze.onlyheroes.Listeners.BlockInteract;
 import me.godnitze.onlyheroes.Manager.ConfigManager;
 import me.godnitze.onlyheroes.Objects.Game;
 import me.godnitze.onlyheroes.Manager.GameManager;
@@ -48,19 +49,7 @@ public final class OnlyHeroes extends JavaPlugin {
         } else {
             this.gameManager.gamesLimit = configManager.getInt(configFile,"max-games");
         }
-
-       /*if (gamesFile.getConfigurationSection("games") != null) {
-            for (String gameName : gamesFile.getConfigurationSection("games").getKeys(false)) {
-                Game game = new Game(gameName,this);
-                boolean status = this.gameManager.registerGame(game);
-                if (!status) {
-                    getLogger().warning("Can't load game " + gameName + "! Reached game limit for this server.");
-                }
-            }
-        } else {
-            // We can assume that no games are created
-            getLogger().warning("No games have been created. Please create one using the creation command.");
-        }*/
+        getServer().getPluginManager().registerEvents(new BlockInteract(this), this);
 
 
 

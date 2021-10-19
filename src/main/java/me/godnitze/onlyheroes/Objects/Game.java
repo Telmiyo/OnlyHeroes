@@ -26,7 +26,7 @@ public class Game {
 
     //Active Game Activation
     private List<GamePlayer> players;
-    private Set<GamePlayer> spectator;
+    private Set<GamePlayer> spectators;
 
     //STATES
     public GameState currentState = GameState.LOBBY;
@@ -74,7 +74,7 @@ public class Game {
         }
 
         this.players = new ArrayList<>();
-        this.spectator = new HashSet<>();
+        this.spectators = new HashSet<>();
 
     }
 
@@ -98,8 +98,8 @@ public class Game {
         return players;
     }
 
-    public Set<GamePlayer> getSpectator() {
-        return spectator;
+    public Set<GamePlayer> getSpectators() {
+        return spectators;
     }
 
     public GameState getCurrentState(){
@@ -108,23 +108,14 @@ public class Game {
 
     public boolean isState(GameState gameState){ return getCurrentState() == gameState; }
 
-    public boolean startGame(GamePlayer gamePlayer){
+    public boolean startGame(Player player){
 
-        if(!isState(GameState.LOBBY))
-        {
-            gamePlayer.setGameId("Game already started");
+        if(!isState(GameState.LOBBY)) {
+            player.sendMessage(ChatUtil.format("&b OnlyHeroes &7>> &c Game already started!"));
             return false;
         }
 
-        for(int i = 0;i < players.size();++i)
-        {
-            if(gamePlayer.getName() == players.get(i).getName())
-            {
-                setCurrentState(GameState.STARTING);
-                return true;
-            }
-        }
-
+        setCurrentState(GameState.STARTING);
         return true;
     }
 
@@ -162,7 +153,7 @@ public class Game {
         //gamePlayer.getPlayer().setGameMode(gamePlayer.getPlayer().getMaxHealth());
         gamePlayer.getPlayer().getInventory().setArmorContents(null);
 
-        if(getPlayers().size() == minPlayers){
+        if(getPlayers().size() == getMinPlayers()){
 
             sendMessage("&a[*] The game will begin in 10 seconds...");
             setCurrentState(GameState.STARTING);
@@ -189,7 +180,7 @@ public class Game {
         }
         sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &cYou are not in any game"));
 
-        return true;
+        return false;
     }
 
     public void sendMessage(String string) {
@@ -256,6 +247,22 @@ public class Game {
 
         }
 
+    }
+
+    public GamePlayer getPlayerFromGame(Player player) {
+        for (GamePlayer gamePlayer : getPlayers()) {
+            if (gamePlayer.getPlayer() == player) {
+                return gamePlayer;
+            }
+        }
+
+        for (GamePlayer gamePlayer : getSpectators()) {
+            if (gamePlayer.getPlayer() == player) {
+                return gamePlayer;
+            }
+        }
+
+        return null;
     }
 
     public void cleanUp(){

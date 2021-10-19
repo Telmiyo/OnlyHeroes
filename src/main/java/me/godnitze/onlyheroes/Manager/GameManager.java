@@ -1,8 +1,10 @@
 package me.godnitze.onlyheroes.Manager;
 
 import me.godnitze.onlyheroes.Objects.Game;
+import me.godnitze.onlyheroes.Objects.GamePlayer;
 import me.godnitze.onlyheroes.OnlyHeroes;
 import me.godnitze.onlyheroes.Tasks.GameStartCountDown;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -57,6 +59,23 @@ public class GameManager {
 
     public void removeGame(Game game){
         games.remove(game);
+
+        //TODO Remove Config
+
+    }
+
+    public GamePlayer getPlayerFromGame(Player player) {
+
+        for(Game games : getGames()){
+            return games.getPlayerFromGame(player);
+        }
+        return null;
+    }
+    public Game getGamePlayer(Player player){
+        for(Game games : getGames()){
+            if(games.getPlayerFromGame(player) != null){ return games;}
+        }
+        return null;
     }
 
     public void printLog(Game game){ game.printLog(); }

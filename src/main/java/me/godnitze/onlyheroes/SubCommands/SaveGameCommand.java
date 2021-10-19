@@ -37,7 +37,7 @@ public class SaveGameCommand extends SubCommand {
                 onlyHeroes.gameManager.removeGame(onlyHeroes.gameManager.getGame(args[1]));
             }
             Game game = new Game(args[1],onlyHeroes);
-            boolean status = onlyHeroes.gameManager.registerGame(game);//POSIBLE BUG QUE NO SE BORREN LOS ARCHIVOS DEL CONFIG
+            boolean status = onlyHeroes.gameManager.registerGame(game);
             if (!status) {
                 onlyHeroes.getLogger().warning("Can't load game " + args[1] + "! Reached game limit for this server.");
            }
