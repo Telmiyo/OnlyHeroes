@@ -18,16 +18,12 @@ import java.util.Arrays;
 
 public class ArenaInventory implements Listener {
 
-    private Inventory inv = null;
+    private static Inventory inv = null;
     private OnlyHeroes onlyHeroes = null;
 
-    public ArenaInventory(){}
-
-    public void createInv(OnlyHeroes onlyHeroes){
+    public ArenaInventory(OnlyHeroes onlyHeroes){
         this.onlyHeroes = onlyHeroes;
-        inv = Bukkit.createInventory(null, 9, "Arenas");
-
-        initializeItems();
+        inv = Bukkit.createInventory(null, 45, "Arenas");
     }
 
     private void initializeItems() {
@@ -37,20 +33,17 @@ public class ArenaInventory implements Listener {
 
             if(game.isState(GameState.LOBBY) || game.isState(GameState.STARTING)) {
                 if(game.getPlayers().size() == game.getMaxPlayers()) {
-                    inv.addItem(createGuiItem(Material.RED_WOOL, game.getDisplayName(), game.getMinPlayers() + "/" + game.getMaxPlayers(), "§b" + game.getCurrentState()));
+                    inv.addItem(createGuiItem(Material.RED_WOOL, game.getDisplayName(), game.getPlayers().size() + "/" + game.getMaxPlayers(), "§b" + game.getCurrentState()));
 
                 }
                 else{
-                    inv.addItem(createGuiItem(Material.GREEN_WOOL, game.getDisplayName(), game.getMinPlayers() + "/" + game.getMaxPlayers(), "§b" + game.getCurrentState()));
+                    inv.addItem(createGuiItem(Material.GREEN_WOOL, game.getDisplayName(), game.getPlayers().size() + "/" + game.getMaxPlayers(), "§b" + game.getCurrentState()));
                 }
             }
             else{
-                inv.addItem(createGuiItem(Material.YELLOW_WOOL, game.getDisplayName(), game.getMinPlayers() + "/" + game.getMaxPlayers(), "§b" + game.getCurrentState()));
+                inv.addItem(createGuiItem(Material.YELLOW_WOOL, game.getDisplayName(), game.getPlayers().size() + "/" + game.getMaxPlayers(), "§b" + game.getCurrentState()));
             }
         }
-
-
-        //inv.addItem(createGuiItem(Material.IRON_HELMET, "§bExample Helmet", "§aFirst line of the lore", "§bSecond line of the lore"));
     }
 
     protected ItemStack createGuiItem(final Material material, final String name, final String... lore){
@@ -70,6 +63,8 @@ public class ArenaInventory implements Listener {
 
     // You can open the inventory with this
     public void openInventory(final HumanEntity ent) {
+        inv.clear();
+        initializeItems();
         ent.openInventory(inv);
     }
 
@@ -90,7 +85,7 @@ public class ArenaInventory implements Listener {
         // Using slots click is a best option for your inventory click's
         p.sendMessage("You clicked at slot " + e.getRawSlot());
         if(clickedItem.getType().equals(Material.GREEN_WOOL)) {
-            Game game = onlyHeroes.gameManager.getGame(clickedItem.getItemMeta().getDisplayName();
+            Game game = onlyHeroes.gameManager.getGame(clickedItem.getItemMeta().getDisplayName());
             game.joinGame(new GamePlayer(p),game,p);
         }
     }
@@ -104,4 +99,3 @@ public class ArenaInventory implements Listener {
     }
 }
 
-}

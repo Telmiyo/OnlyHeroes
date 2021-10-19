@@ -4,6 +4,7 @@ import me.godnitze.onlyheroes.Listeners.AvoidDamage;
 import me.godnitze.onlyheroes.Listeners.BlockInteract;
 import me.godnitze.onlyheroes.Listeners.PlayerMove;
 import me.godnitze.onlyheroes.Manager.ConfigManager;
+import me.godnitze.onlyheroes.Objects.ArenaInventory;
 import me.godnitze.onlyheroes.Objects.Game;
 import me.godnitze.onlyheroes.Manager.GameManager;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,6 +21,8 @@ public final class OnlyHeroes extends JavaPlugin {
 
     public FileConfiguration configFile;
     public FileConfiguration gamesFile;
+    public ArenaInventory arenaInventory;
+
 
 
     @Override
@@ -31,11 +34,14 @@ public final class OnlyHeroes extends JavaPlugin {
         this.gameManager = new GameManager(this);
         this.commandManager = new CommandManager(this);
         ConfigManager.getInstance().setPlugin(this);
+        arenaInventory = new ArenaInventory(this);
 
         //Initialize Listeners
         getServer().getPluginManager().registerEvents(new BlockInteract(this), this);
         getServer().getPluginManager().registerEvents(new PlayerMove(this), this);
         getServer().getPluginManager().registerEvents(new AvoidDamage(this), this);
+        getServer().getPluginManager().registerEvents(new ArenaInventory(this), this);
+
 
         //SetCommands
         getCommand("oh").setExecutor(commandManager);
