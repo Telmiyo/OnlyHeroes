@@ -55,6 +55,10 @@ public class GameManager {
         return null;
     }
 
+    public void removeGame(Game game){
+        games.remove(game);
+    }
+
     public void printLog(Game game){ game.printLog(); }
 
     public void cleanup(){

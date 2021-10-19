@@ -5,7 +5,7 @@ import me.godnitze.onlyheroes.Manager.SubCommand;
 import me.godnitze.onlyheroes.utils.ChatUtil;
 import org.bukkit.entity.Player;
 
-public class ReloadConfig extends SubCommand {
+public class ReloadConfigCommand extends SubCommand {
 
     @Override
     public String getName() {

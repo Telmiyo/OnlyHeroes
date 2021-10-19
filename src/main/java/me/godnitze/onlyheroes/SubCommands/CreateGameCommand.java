@@ -2,6 +2,7 @@ package me.godnitze.onlyheroes.SubCommands;
 
 import me.godnitze.onlyheroes.Manager.ConfigManager;
 import me.godnitze.onlyheroes.Manager.SubCommand;
+import me.godnitze.onlyheroes.Objects.Game;
 import me.godnitze.onlyheroes.OnlyHeroes;
 import me.godnitze.onlyheroes.utils.ChatUtil;
 import org.bukkit.Bukkit;
@@ -10,10 +11,10 @@ import org.bukkit.WorldCreator;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public class CreateGame extends SubCommand {
+public class CreateGameCommand extends SubCommand {
     private OnlyHeroes onlyHeroes = null;
 
-    public CreateGame(OnlyHeroes onlyHeroes){this.onlyHeroes = onlyHeroes;}
+    public CreateGameCommand(OnlyHeroes onlyHeroes){this.onlyHeroes = onlyHeroes;}
 
     @Override
     public String getName() {
@@ -34,14 +35,27 @@ public class CreateGame extends SubCommand {
     public void perform(Player player, String[] args) {
         if(args.length == 5){
             //TODO
+            if(onlyHeroes.gameManager.getGame(args[1]) != null)
+            {
+                player.sendMessage(ChatUtil.format("&9 OnlyHeroes &7>> &c" + args[1] + " &c game already exists"));
+                return;
+            }
             ConfigManager configManager = ConfigManager.getInstance();
             FileConfiguration gamesFile = onlyHeroes.gamesFile;
 
             configManager.setData(gamesFile, "games." + args[1] + ".displayName", args[1]);
-            configManager.setData(gamesFile, "games." + args[1] + ".maxPlayers", Integer.parseInt(args[2]));
-            configManager.setData(gamesFile, "games." + args[1] + ".minPlayers", Integer.parseInt(args[3]));
+            configManager.setData(gamesFile, "games." + args[1] + ".minPlayers", Integer.parseInt(args[2]));
+            configManager.setData(gamesFile, "games." + args[1] + ".maxPlayers", Integer.parseInt(args[3]));
             configManager.setData(gamesFile, "games." + args[1] + ".worldName", args[4]);
+            configManager.setData(gamesFile, "games." + args[1] + ".lobbyPoint", "X:0, Y:0, Z:0");
+
+            for(int i = 0; i <= Integer.parseInt(args[3]); ++i){
+                configManager.setData(gamesFile, "games." + args[1] + ".spawnPoints" + "." + i, "X:0, Y:0, Z:0");
+            }
+
             player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &a successfully created the game " + args[1]));
+
+
         }
         else{
             player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &cYou did not provide the correct arguments!") );

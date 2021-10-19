@@ -58,8 +58,8 @@ public class Game {
         }
 
         this.spawnPoints = new ArrayList<>();
-
-        for (String point : gamesFile.getStringList("games." + gameName + ".spawnPoints")) {
+        int id = 0;
+        for (String point : gamesFile.getStringList("games." + gameName + ".spawnPoints" + "." + id)) {
             // X:0,Y:0,Z:0
             try {
                 String[] values = point.split(","); // [X:0, Y:0, Z:0]
@@ -91,6 +91,8 @@ public class Game {
     public String getDisplayName() {
         return displayName;
     }
+
+    public List<Location> getSpawnPoints() { return spawnPoints; }
 
     public List<GamePlayer> getPlayers() {
         return players;
@@ -160,7 +162,7 @@ public class Game {
         //gamePlayer.getPlayer().setGameMode(gamePlayer.getPlayer().getMaxHealth());
         gamePlayer.getPlayer().getInventory().setArmorContents(null);
 
-        if(getPlayers().size() == maxPlayers){
+        if(getPlayers().size() == minPlayers){
 
             sendMessage("&a[*] The game will begin in 10 seconds...");
             setCurrentState(GameState.STARTING);

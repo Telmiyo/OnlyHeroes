@@ -23,8 +23,13 @@ public class CommandManager implements CommandExecutor {
         subcommands.add(new JoinCommand(onlyHeroes));
         subcommands.add(new LeaveCommand(onlyHeroes));
         subcommands.add(new StartCommand(onlyHeroes));
-        subcommands.add(new ReloadConfig());
-        subcommands.add(new CreateGame(onlyHeroes));
+        subcommands.add(new ReloadConfigCommand());
+        subcommands.add(new CreateGameCommand(onlyHeroes));
+        subcommands.add(new SetSpawnCommand(onlyHeroes));
+        subcommands.add(new SetLobbyCommand(onlyHeroes));
+        subcommands.add(new SaveGameCommand(onlyHeroes));
+        subcommands.add(new ListGameCommand(onlyHeroes));
+        subcommands.add(new RemoveGameCommand(onlyHeroes));
     }
 
     @Override
