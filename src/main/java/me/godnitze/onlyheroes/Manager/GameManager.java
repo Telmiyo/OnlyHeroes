@@ -14,14 +14,14 @@ import java.util.Set;
 public class GameManager {
 
     //Classes
-    public GameState currentState = GameState.LOBBY;
+    private GameState currentState = GameState.LOBBY;
 
     private final OnlyHeroes plugin;
     private GameStartCountDown gameStartCountDown;
 
     //Properties
     public int gamesLimit = 0;
-    public List<Game> games = new ArrayList<>();
+    private List<Game> games = new ArrayList<>();
 
     public GameManager(OnlyHeroes plugin){
         this.plugin = plugin;
