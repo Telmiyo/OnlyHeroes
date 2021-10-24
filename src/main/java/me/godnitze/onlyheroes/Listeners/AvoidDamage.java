@@ -23,7 +23,7 @@ public class AvoidDamage implements Listener {
 
             Game game = onlyHeroes.gameManager.getGamePlayer(player);
             if(game != null){
-                if(!game.isState(GameState.PHASE1) || !game.isState(GameState.PHASE2 ) || !game.isState(GameState.PHASE3) || !game.isState(GameState.DEATHMATCH))
+                if(!game.isState(GameState.INGAME) || !game.isState(GameState.DEATHMATCH))
                 {
                     event.setCancelled(true);
                 }

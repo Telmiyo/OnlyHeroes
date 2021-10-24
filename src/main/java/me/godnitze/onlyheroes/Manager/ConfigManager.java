@@ -7,7 +7,6 @@ import org.bukkit.WorldCreator;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -19,6 +18,7 @@ import java.util.List;
 public class ConfigManager {
     private static ConfigManager single_inst = null;
 
+    private ArrayList<File> customFiles = new ArrayList<File>();
     private ArrayList<FileConfiguration> customConfigs = new ArrayList<FileConfiguration>();
     private ArrayList<String> configNames = new ArrayList<String>();
     private Plugin plugin = null;
@@ -42,14 +42,30 @@ public class ConfigManager {
         return createNewCustomConfig(name);
     }
 
+    public File getFile(String name){
+        plugin.getLogger().warning( Integer.toString(customFiles.size()));
+
+        if (customFiles.size() > 0) {
+            for (File conf : customFiles) {
+                if (conf.getName().equalsIgnoreCase(name)) {
+                    plugin.getLogger().warning( Integer.toString(customConfigs.size()));
+                    return conf;
+                }
+            }
+        }
+        plugin.getLogger().warning( name + " file created");
+        return null;
+    }
+
     public void reloadConfigs(){
         customConfigs.clear();
-        configNames.clear();
+
     }
 
     public FileConfiguration createNewCustomConfig(String name) {
         FileConfiguration fileConfiguration;
         File configFile = new File(plugin.getDataFolder(), name);
+        customFiles.add(configFile);
         if (!configFile.exists()) {
             configFile.getParentFile().mkdirs();
             plugin.saveResource(name, false);

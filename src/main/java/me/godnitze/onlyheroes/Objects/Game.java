@@ -22,7 +22,9 @@ public class Game {
     private int minPlayers;
     private World world;
     private List<Location> spawnPoints;
+    private List<Location> deathmatchSpawnPoints;
     private Location lobbyPoint;
+    private boolean isStarted = false;
 
     //Active Game Activation
     private List<GamePlayer> players;
@@ -44,7 +46,7 @@ public class Game {
         this.minPlayers = gamesFile.getInt("games." + gameName + ".minPlayers");
 
         //RollbackHandler.getRollbackHandler().rollback(fileConfiguration.getString("games." + gameName + ".worldName"));
-        this.world = Bukkit.createWorld(new WorldCreator(gamesFile.getString("games." + gameName + ".worldName") + "_active"));
+        this.world = Bukkit.createWorld(new WorldCreator(gamesFile.getString("games." + gameName + ".worldName")));
 
         //TODO Spawn points
         try {
@@ -74,8 +76,11 @@ public class Game {
             }
         }
 
+        this.deathmatchSpawnPoints = new ArrayList<>();
         this.players = new ArrayList<>();
         this.spectators = new HashSet<>();
+        this.gameStartCountDown = new GameStartCountDown(this);
+        this.gameStartCountDown.setTimeLeft(20);
 
     }
 
@@ -92,6 +97,10 @@ public class Game {
     public String getDisplayName() {
         return displayName;
     }
+
+    public boolean isStarted() { return isStarted; }
+
+    public void setStarted(boolean started) { isStarted = started; }
 
     public List<Location> getSpawnPoints() { return spawnPoints; }
 
@@ -207,29 +216,52 @@ public class Game {
             case STARTING:
                 Bukkit.broadcastMessage("Starting State");
                 //Timer on chat
-                this.gameStartCountDown = new GameStartCountDown(this);
                 this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
 
                 break;
-            case PHASE1:
-                Bukkit.broadcastMessage("Phase1 State");
+            case INGAME:
+                Bukkit.broadcastMessage("INGAME State");
                 if(this.gameStartCountDown != null) gameStartCountDown.cancel();
                 //Spawn players randomly
-                 spawnPlayers();
 
-                 //Start CountDown
-                this.gameStartCountDown = new GameStartCountDown(this);
-                this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
+                //Start CountDown
+                 if(!isStarted){
+                     setMovementFrozen(true);
+                     spawnPlayers(spawnPoints);
+                     this.gameStartCountDown = new GameStartCountDown(this);
+                     this.gameStartCountDown.setTimeLeft(15);
+                     this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
+                 }
+                 else{
+                     if(this.gameStartCountDown != null) gameStartCountDown.cancel();
+                     this.gameStartCountDown = new GameStartCountDown(this);
+                     this.gameStartCountDown.setTimeLeft(35);
+                     this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
+                 }
 
-                break;
-            case PHASE2:
-                Bukkit.broadcastMessage("Phase2 State");
-                break;
-            case PHASE3:
-                Bukkit.broadcastMessage("Phase3 State");
+
                 break;
             case DEATHMATCH:
                 Bukkit.broadcastMessage("Deathmatch State");
+
+                if(!isStarted)
+                {
+                    setDeathmatchSpawns();
+                    spawnPlayers(deathmatchSpawnPoints);
+                    setMovementFrozen(true);
+                    if(this.gameStartCountDown != null) gameStartCountDown.cancel();
+                    this.gameStartCountDown = new GameStartCountDown(this);
+                    this.gameStartCountDown.setTimeLeft(10);
+                    this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
+                }
+                else{
+                    if(this.gameStartCountDown != null) gameStartCountDown.cancel();
+                    this.gameStartCountDown = new GameStartCountDown(this);
+                    this.gameStartCountDown.setTimeLeft(10);
+                    this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
+                }
+
+
                 break;
             case WON:
                 Bukkit.broadcastMessage("Won State");
@@ -241,12 +273,12 @@ public class Game {
         }
     }
 
-    public void spawnPlayers(){
+    public void spawnPlayers(List<Location> spawns){
 
         int id = 0;
         for (GamePlayer gamePlayer : getPlayers()) {
             try {
-                gamePlayer.teleport(spawnPoints.get(id));
+                gamePlayer.teleport(spawns.get(id));
                 id += 1;
                 //gamePlayer.getPlayer().setGameMode(GameMode.SURVIVAL);
 
@@ -288,6 +320,26 @@ public class Game {
         }
 
         return null;
+    }
+
+    public void setDeathmatchSpawns() {
+        int currentPlayers = getPlayers().size();
+        Random random = new Random();
+        Set<Integer> alreadyUsedNumbers = new HashSet<>();
+        int i = 0;
+        while (alreadyUsedNumbers.size() < currentPlayers) {
+
+            // Número aleatorio entre 0 y 40, excluido el 40.
+            int randomNumber = random.nextInt(currentPlayers);
+
+            // Si no lo hemos usado ya, lo usamos y lo metemos en el conjunto de usados.
+            if (!alreadyUsedNumbers.contains(randomNumber)) {
+                alreadyUsedNumbers.add(randomNumber);
+                deathmatchSpawnPoints.add(spawnPoints.get(randomNumber));
+                i++;
+            }
+
+        }
     }
 
     public void cleanUp(){

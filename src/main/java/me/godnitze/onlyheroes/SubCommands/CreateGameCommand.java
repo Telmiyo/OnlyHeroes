@@ -59,7 +59,7 @@ public class CreateGameCommand extends SubCommand {
             Game game = new Game(args[1],onlyHeroes);
             boolean status = onlyHeroes.gameManager.registerGame(game);
             if (!status) {
-                onlyHeroes.getLogger().warning("Can't load game " + args[1] + "! Reached game limit for this server.");
+                player.sendMessage(ChatUtil.format("&9 OnlyHeroes &7>> &c Try setting single-server-mode: false or increasing the max-games value "));
             }
             else{
                 player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &a successfully created the game " + args[1]));

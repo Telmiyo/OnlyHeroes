@@ -31,6 +31,11 @@ public class RemoveGameCommand extends SubCommand {
     public void perform(Player player, String[] args) {
         if(args.length == 2){
 
+            if(onlyHeroes.gameManager.getGame(args[1]) == null){
+                player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &cThe game you provided doesn't exist in config.yml!") );
+                return;
+            }
+
             //TODO Remove Config
             ConfigManager configManager = ConfigManager.getInstance();
             FileConfiguration gamesFile = onlyHeroes.gamesFile;

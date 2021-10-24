@@ -4,7 +4,7 @@
 #    displayName: "Game01"
 #    maxPlayers: 32
 #    minPlayers: 24
-#    worldName: "world"
+#    WorldName: "world"
 #    lobbyPoint: "X:0, Y:0, Z:5"
 #    spawnPoints:
 #      - "X:399, Y:62, Z:236"

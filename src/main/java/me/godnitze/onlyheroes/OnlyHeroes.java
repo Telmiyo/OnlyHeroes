@@ -63,10 +63,6 @@ public final class OnlyHeroes extends JavaPlugin {
             this.gameManager.gamesLimit = configManager.getInt(configFile,"max-games");
         }
 
-
-
-
-
     }
 
 

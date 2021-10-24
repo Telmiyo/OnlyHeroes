@@ -34,9 +34,6 @@ public class GameManager {
     public boolean registerGame(Game game) {
 
         if (games.size() == gamesLimit && gamesLimit != -1) { // If we're at our limit, don't add a game
-            plugin.getLogger().warning("Can't load game " + game.getDisplayName() + "! Reached game limit for this server.");
-            plugin.getLogger().warning("Game Size " + Integer.toString(games.size()));
-
             return false;
         }
 
