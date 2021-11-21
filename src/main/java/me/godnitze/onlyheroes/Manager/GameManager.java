@@ -79,7 +79,7 @@ public class GameManager {
         }
         return null;
     }
-    public Game getGamePlayer(Player player){
+    public Game GetGameFromPlayer(Player player){
         for(Game games : getGames()){
             if(games.getPlayerFromGame(player) != null){ return games;}
         }

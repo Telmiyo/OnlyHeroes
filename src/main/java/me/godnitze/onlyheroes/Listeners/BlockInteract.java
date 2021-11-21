@@ -1,6 +1,5 @@
 package me.godnitze.onlyheroes.Listeners;
 
-import me.godnitze.onlyheroes.Manager.GameState;
 import me.godnitze.onlyheroes.Objects.Game;
 import me.godnitze.onlyheroes.OnlyHeroes;
 import org.bukkit.entity.Player;
@@ -18,7 +17,7 @@ public class BlockInteract implements Listener {
     public void OnBlockBreak(BlockBreakEvent e){ handle(e, e.getPlayer()); }
 
     private void handle(Cancellable event, Player player){
-        Game game = onlyHeroes.gameManager.getGamePlayer(player);
+        Game game = onlyHeroes.gameManager.GetGameFromPlayer(player);
 
         if(game != null){
             event.setCancelled(true);

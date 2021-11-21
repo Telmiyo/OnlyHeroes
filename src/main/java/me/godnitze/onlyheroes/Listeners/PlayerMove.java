@@ -18,7 +18,7 @@ public class PlayerMove implements Listener {
 
         Player player = event.getPlayer();
 
-        Game game = onlyHeroes.gameManager.getGamePlayer(player);
+        Game game = onlyHeroes.gameManager.GetGameFromPlayer(player);
         if(game != null && game.isMovementFrozen()){
             if (event.getFrom().getBlockX() != event.getTo().getBlockX() || event.getFrom().getBlockZ() != event.getTo().getBlockZ()) {
                 player.teleport(event.getFrom());

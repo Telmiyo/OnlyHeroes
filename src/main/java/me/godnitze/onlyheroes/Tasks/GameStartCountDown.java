@@ -19,54 +19,48 @@ public class GameStartCountDown extends BukkitRunnable {
             cancel();
             switch (game.getCurrentState()){
                 case STARTING:
+                    game.setCurrentState(GameState.PREINGAME);
+                    game.sendMessage(ChatUtil.format("&cPlease wait &7[&e30&7]&c seconds before the games begin."));
+                    break;
+                case PREINGAME:
                     game.setCurrentState(GameState.INGAME);
-
+                    game.sendMessage(ChatUtil.format("&bThe game has begun!"));
+                    game.sendMessage(ChatUtil.format("&7[&e30&7]&c seconds until deathmatch!"));
                     break;
                 case INGAME:
-                    if(!game.isStarted())
-                    {
-                        game.setMovementFrozen(false);
-                        game.setStarted(true);
-                        game.setCurrentState(GameState.INGAME);
-                        game.sendMessage(ChatUtil.format("&bThe game has begun!"));
+                    game.setCurrentState(GameState.PREDEATHMATCH);
+                    game.sendMessage(ChatUtil.format("&4Please allow &7[&e10&7]&4 seconds for all the players to load the map."));
+                    break;
+                case PREDEATHMATCH:
+                    game.setCurrentState(GameState.DEATHMATCH);
+                    game.sendMessage(ChatUtil.format("&cFight to the death!"));
+                    game.sendMessage(ChatUtil.format("&7[&e3&7] minutes until the deathmatch ends!"));
 
-                    }
-                    else{
-                        game.setCurrentState(GameState.DEATHMATCH);
-                        game.setStarted(false);
-
-                    }
                     break;
                 case DEATHMATCH:
-                   // game.setCurrentState(GameState.WON);
-                    if(!game.isStarted()){
-                        game.setMovementFrozen(false);
-                        game.setStarted(true);
-                        game.setCurrentState(GameState.DEATHMATCH);
-                        game.sendMessage(ChatUtil.format("&cFight to the death!"));
-                    }
-                    else{
-                        //CALL DE LIGHTING SYSTEM
-
-                    }
-
+                    //TODO END GAME
+                    game.setCurrentState(GameState.WON);
                     break;
             }
             return;
         }
+
+        // Messages System
         switch (game.getCurrentState()){
             case STARTING:
-                if(timeLeft <= 10){ game.sendMessage(ChatUtil.format("&7[" + "&e" + timeLeft + "&7] &c seconds until the lobby ends"));}
+                if(timeLeft == 60 || timeLeft <= 10){ game.sendMessage(ChatUtil.format("&7[" + "&e" + timeLeft + "&7] &c seconds until the lobby ends"));}
+                break;
+            case PREINGAME:
+                if(timeLeft == 30 || timeLeft <= 10 ) { game.sendMessage(ChatUtil.format("&7[" + "&e" + timeLeft + "&7] &c seconds until game begins"));}
                 break;
             case INGAME:
-                if(game.isStarted() && (timeLeft == 30 || timeLeft <= 10)){ game.sendMessage(ChatUtil.format("&7[" + "&e" + timeLeft + "&7] &c seconds until deathmatch begins"));}
-                else if(!game.isStarted()){game.sendMessage(ChatUtil.format("&7[" + "&e" + timeLeft + "&7] &c seconds until game begins"));}
-
+               if(timeLeft == 60 || timeLeft == 30 || timeLeft <= 10){ game.sendMessage(ChatUtil.format("&7[" + "&e" + timeLeft + "&7] &c seconds until deathmatch!"));}
+                break;
+            case PREDEATHMATCH:
+                if(timeLeft <= 5){game.sendMessage(ChatUtil.format("&7[" + "&e" + timeLeft + "&7] &c seconds until deathmatch!"));}
                 break;
             case DEATHMATCH:
-                 if(!game.isStarted()){ game.sendMessage(ChatUtil.format("&7[" + "&e" + timeLeft + "&7] &c seconds until the until deathmatch"));}
-                 else if(game.getPlayers().size() == 1){game.setCurrentState(GameState.WON);}
-
+                if(timeLeft == 10){ game.sendMessage(ChatUtil.format("&cStorm Has Started Moving!"));}
                 break;
         }
     }

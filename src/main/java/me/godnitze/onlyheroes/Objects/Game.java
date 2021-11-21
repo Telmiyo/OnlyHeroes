@@ -232,7 +232,7 @@ public class Game {
         switch (currentState){
             case LOBBY:
                 Bukkit.broadcastMessage("Lobby State");
-                //They cannot break selected lobby blocks.
+                // TODO MAP VOTING SYSTEM ENABLED
                 break;
             case STARTING:
                 Bukkit.broadcastMessage("Starting State");
@@ -240,45 +240,52 @@ public class Game {
                 this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
 
                 break;
-            case INGAME:
-                Bukkit.broadcastMessage("INGAME State");
+            case PREINGAME:
                 if(this.gameStartCountDown != null) gameStartCountDown.cancel();
                 //Spawn players randomly
-
                 //Start CountDown
-                 if(!isStarted){
-                     setMovementFrozen(true);
-                     spawnPlayers(spawnPoints);
-                     this.gameStartCountDown = new GameStartCountDown(this);
-                     this.gameStartCountDown.setTimeLeft(15);
-                 }
-                 else{
-                     if(this.gameStartCountDown != null) gameStartCountDown.cancel();
-                     this.gameStartCountDown = new GameStartCountDown(this);
-                     this.gameStartCountDown.setTimeLeft(35);
-                 }
+                setMovementFrozen(true);
+                spawnPlayers(spawnPoints);
+                this.gameStartCountDown = new GameStartCountDown(this);
+                this.gameStartCountDown.setTimeLeft(15);
                 this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
 
+                break;
+            case INGAME:
+                Bukkit.broadcastMessage("Ingame State");
+                setMovementFrozen(false);
+                if(this.gameStartCountDown != null) gameStartCountDown.cancel();
+                this.gameStartCountDown = new GameStartCountDown(this);
+                this.gameStartCountDown.setTimeLeft(35);
+                this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
 
                 break;
-            case DEATHMATCH:
-                Bukkit.broadcastMessage("Deathmatch State");
-
-                if(!isStarted)
-                {
-                    setDeathmatchSpawns();
-                    spawnPlayers(deathmatchSpawnPoints);
-                    setMovementFrozen(true);
-                }
+            case PREDEATHMATCH:
+                Bukkit.broadcastMessage("PreDeathmatch State");
+                setDeathmatchSpawns();
+                spawnPlayers(deathmatchSpawnPoints);
+                setMovementFrozen(true);
                 if(this.gameStartCountDown != null) gameStartCountDown.cancel();
                 this.gameStartCountDown = new GameStartCountDown(this);
                 this.gameStartCountDown.setTimeLeft(10);
                 this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
 
+                break;
+            case DEATHMATCH:
+                Bukkit.broadcastMessage("Deathmatch State");
+                // TODO TP & start Cooldown
+                setMovementFrozen(false);
+                if(this.gameStartCountDown != null) gameStartCountDown.cancel();
+                this.gameStartCountDown = new GameStartCountDown(this);
+                this.gameStartCountDown.setTimeLeft(10);
+                this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
 
                 break;
             case WON:
                 Bukkit.broadcastMessage("Won State");
+                sendMessage(ChatUtil.format("&aThe games have ended!"));
+                sendMessage(ChatUtil.format("&2<PlayerName>> &ahas won the Survival Games!"));
+
                 break;
             case RESTARTING:
                 Bukkit.broadcastMessage("Restarting State");

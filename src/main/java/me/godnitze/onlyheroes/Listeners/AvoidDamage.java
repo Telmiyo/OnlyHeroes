@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 
 public class AvoidDamage implements Listener {
 
@@ -21,7 +20,7 @@ public class AvoidDamage implements Listener {
         if(event.getEntity() instanceof  Player){
             Player player = (Player) event.getEntity();
 
-            Game game = onlyHeroes.gameManager.getGamePlayer(player);
+            Game game = onlyHeroes.gameManager.GetGameFromPlayer(player);
             if(game != null){
                 if(!game.isState(GameState.INGAME) || !game.isState(GameState.DEATHMATCH))
                 {
