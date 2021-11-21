@@ -1,15 +1,12 @@
 package me.godnitze.onlyheroes.SubCommands;
 
-import me.godnitze.onlyheroes.Manager.ConfigManager;
 import me.godnitze.onlyheroes.Manager.SubCommand;
-import me.godnitze.onlyheroes.Objects.Game;
 import me.godnitze.onlyheroes.OnlyHeroes;
 import me.godnitze.onlyheroes.utils.ChatUtil;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class SaveGameCommand extends SubCommand {
-    private OnlyHeroes onlyHeroes = null;
+    private final OnlyHeroes onlyHeroes;
 
     public SaveGameCommand(OnlyHeroes onlyHeroes){this.onlyHeroes = onlyHeroes;}
 
@@ -32,19 +29,13 @@ public class SaveGameCommand extends SubCommand {
     public void perform(Player player, String[] args) {
 
         if(args.length == 2){
-            //TODO
-
-            if(onlyHeroes.gameManager.getGame(args[1]) != null){
-                onlyHeroes.gameManager.removeGame(onlyHeroes.gameManager.getGame(args[1]));
+            if(onlyHeroes.gameManager.getGame(args[1]) == null){
+                player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &a" + args[1] + " doesn't exist"));
+                player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &ause /oh create"));
+                return;
             }
-            Game game = new Game(args[1],onlyHeroes);
-            boolean status = onlyHeroes.gameManager.registerGame(game);
-            if (!status) {
-                onlyHeroes.getLogger().warning("Can't load game " + args[1] + "! Reached game limit for this server.");
-           }
-            else{
-                player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &a successfully saved the game " + args[1]));
-            }
+            onlyHeroes.gameManager.saveGame(args[1]);
+            player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &a " + args[1] + " successfully saved"));
 
         }
         else{

@@ -38,6 +38,33 @@ public class Game {
     //Constructor
     public Game(String gameName, OnlyHeroes onlyHeroes){
         this.onlyHeroes = onlyHeroes;
+
+        // Initialize Config
+        ConfigManager configManager = ConfigManager.getInstance();
+        FileConfiguration gamesFile = onlyHeroes.gamesFile;
+        configManager.setData(gamesFile, "games." + gameName + ".displayName", gameName);
+        configManager.setData(gamesFile, "games." + gameName + ".minPlayers",1);
+        configManager.setData(gamesFile, "games." + gameName + ".maxPlayers", 2);
+        configManager.setData(gamesFile, "games." + gameName + ".worldName","world");
+        configManager.setData(gamesFile, "games." + gameName + ".lobbyPoint", "X:0, Y:0, Z:0");
+
+        for(int i = 0; i <= maxPlayers - 1; ++i){
+            configManager.setData(gamesFile, "games." + gameName + ".spawnPoints" + "." + i, "X:0, Y:0, Z:0");
+        }
+
+        //Initialize Game Values
+        saveConfig(gameName);
+
+        this.deathmatchSpawnPoints = new ArrayList<>();
+        this.players = new ArrayList<>();
+        this.spectators = new HashSet<>();
+        this.gameStartCountDown = new GameStartCountDown(this);
+        this.gameStartCountDown.setTimeLeft(20);
+
+    }
+
+    public void saveConfig(String gameName)
+    {
         ConfigManager configManager = ConfigManager.getInstance();
         FileConfiguration gamesFile = onlyHeroes.gamesFile;
 
@@ -75,13 +102,6 @@ public class Game {
                 onlyHeroes.getLogger().severe("Failed to load spawnPoint with metadata " + point + " for gameName: '" + gameName + "'. ExceptionType: " + ex);
             }
         }
-
-        this.deathmatchSpawnPoints = new ArrayList<>();
-        this.players = new ArrayList<>();
-        this.spectators = new HashSet<>();
-        this.gameStartCountDown = new GameStartCountDown(this);
-        this.gameStartCountDown.setTimeLeft(20);
-
     }
 
     public int getMaxPlayers() {

@@ -29,37 +29,19 @@ public class RemoveGameCommand extends SubCommand {
 
     @Override
     public void perform(Player player, String[] args) {
-        if(args.length == 2){
-
-            if(onlyHeroes.gameManager.getGame(args[1]) == null){
-                player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &cThe game you provided doesn't exist in config.yml!") );
-                return;
-            }
-
-            //TODO Remove Config
-            ConfigManager configManager = ConfigManager.getInstance();
-            FileConfiguration gamesFile = onlyHeroes.gamesFile;
-
-            configManager.setData(gamesFile, "games." + args[1], null);
-            configManager.setData(gamesFile, "games." + args[1] + ".displayName", null);
-            configManager.setData(gamesFile, "games." + args[1] + ".minPlayers", null);
-            configManager.setData(gamesFile, "games." + args[1] + ".maxPlayers", null);
-            configManager.setData(gamesFile, "games." + args[1] + ".worldName", null);
-            configManager.setData(gamesFile, "games." + args[1] + ".lobbyPoint", null);
-
-            for(int i = 0; i <= onlyHeroes.gameManager.getGame(args[1]).getMaxPlayers(); ++i){
-                configManager.setData(gamesFile, "games." + args[1] + ".spawnPoints" + "." + i, null);
-            }
-
-            onlyHeroes.gameManager.removeGame(onlyHeroes.gameManager.getGame(args[1]));
-            player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &a successfully deleted " + args[1]));
-
-
-        }
-        else{
+        if(args.length != 2)
+        {
             player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &cYou did not provide the correct arguments!") );
             player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &c/oh remove <GameName>"));
+            return;
         }
+        if(onlyHeroes.gameManager.getGame(args[1]) == null)
+        {
+            player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &cThe game you provided doesn't exist in OnlyGames.yml!") );
+            return;
+        }
+        onlyHeroes.gameManager.removeGame(onlyHeroes.gameManager.getGame(args[1]));
+        player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &aGame " + args[1] +" successfully removed from OnlyGames.yml!") );
 
     }
 }

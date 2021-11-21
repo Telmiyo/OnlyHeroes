@@ -3,21 +3,15 @@ package me.godnitze.onlyheroes.Manager;
 import me.godnitze.onlyheroes.Objects.Game;
 import me.godnitze.onlyheroes.Objects.GamePlayer;
 import me.godnitze.onlyheroes.OnlyHeroes;
-import me.godnitze.onlyheroes.Tasks.GameStartCountDown;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class GameManager {
 
     //Classes
-    private GameState currentState = GameState.LOBBY;
-
     private final OnlyHeroes plugin;
-    private GameStartCountDown gameStartCountDown;
 
     //Properties
     public int gamesLimit = 0;
@@ -29,6 +23,11 @@ public class GameManager {
 
     public List<Game> getGames() {
         return games;
+    }
+
+    public boolean createGame(String gameName){
+        Game game = new Game(gameName,plugin);
+        return registerGame(game);
     }
 
     public boolean registerGame(Game game) {
@@ -44,6 +43,8 @@ public class GameManager {
         return true;
     }
 
+    public void saveGame(String gameName){ getGame(gameName).saveConfig(gameName); }
+
     public Game getGame(String gameName){
 
         for(Game game : getGames()){
@@ -57,8 +58,16 @@ public class GameManager {
     public void removeGame(Game game){
         games.remove(game);
 
-        //TODO Remove Config
+        ConfigManager.getInstance().setData(plugin.gamesFile,"games." + game.getDisplayName(),null);
+        ConfigManager.getInstance().setData(plugin.gamesFile,"games." + game.getDisplayName() + ".displayName",null);
+        ConfigManager.getInstance().setData(plugin.gamesFile,"games." + game.getDisplayName() + ".minPlayers",null);
+        ConfigManager.getInstance().setData(plugin.gamesFile,"games." + game.getDisplayName() + ".maxPlayers",null);
+        ConfigManager.getInstance().setData(plugin.gamesFile,"games." + game.getDisplayName() + ".worldName",null);
+        ConfigManager.getInstance().setData(plugin.gamesFile,"games." + game.getDisplayName() + ".lobbyPoint",null);
 
+        for(int i = 0; i <= game.getMaxPlayers() - 1; ++i){
+            ConfigManager.getInstance().setData(plugin.gamesFile, "games." + game.getDisplayName() + ".spawnPoints" + "." + i, null);
+        }
     }
 
     public GamePlayer getPlayerFromGame(Player player) {

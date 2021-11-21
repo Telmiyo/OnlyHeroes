@@ -2,17 +2,13 @@ package me.godnitze.onlyheroes.SubCommands;
 
 import me.godnitze.onlyheroes.Manager.ConfigManager;
 import me.godnitze.onlyheroes.Manager.SubCommand;
-import me.godnitze.onlyheroes.Objects.Game;
 import me.godnitze.onlyheroes.OnlyHeroes;
 import me.godnitze.onlyheroes.utils.ChatUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.WorldCreator;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class CreateGameCommand extends SubCommand {
-    private OnlyHeroes onlyHeroes = null;
+    private final OnlyHeroes onlyHeroes;
 
     public CreateGameCommand(OnlyHeroes onlyHeroes){this.onlyHeroes = onlyHeroes;}
 
@@ -34,12 +30,20 @@ public class CreateGameCommand extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         if(args.length == 5){
-            //TODO
+            // Check if game Exists
             if(onlyHeroes.gameManager.getGame(args[1]) != null)
             {
                 player.sendMessage(ChatUtil.format("&9 OnlyHeroes &7>> &c" + args[1] + " &c game already exists"));
+                player.sendMessage(ChatUtil.format("&9 OnlyHeroes &7>> &c use /oh remove <gameName>"));
                 return;
             }
+            // Create Game & Check if it can be created
+            boolean status = onlyHeroes.gameManager.createGame(args[1]);
+            if (!status) {
+                player.sendMessage(ChatUtil.format("&9 OnlyHeroes &7>> &c Try setting single-server-mode: false or increasing the max-games value on Config.yml"));
+                return;
+            }
+            // Add Config Values
             ConfigManager configManager = ConfigManager.getInstance();
             FileConfiguration gamesFile = onlyHeroes.gamesFile;
 
@@ -52,19 +56,8 @@ public class CreateGameCommand extends SubCommand {
             for(int i = 0; i <= Integer.parseInt(args[3]) - 1; ++i){
                 configManager.setData(gamesFile, "games." + args[1] + ".spawnPoints" + "." + i, "X:0, Y:0, Z:0");
             }
-
-            if(onlyHeroes.gameManager.getGame(args[1]) != null){
-                onlyHeroes.gameManager.removeGame(onlyHeroes.gameManager.getGame(args[1]));
-            }
-            Game game = new Game(args[1],onlyHeroes);
-            boolean status = onlyHeroes.gameManager.registerGame(game);
-            if (!status) {
-                player.sendMessage(ChatUtil.format("&9 OnlyHeroes &7>> &c Try setting single-server-mode: false or increasing the max-games value "));
-            }
-            else{
-                player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &a successfully created the game " + args[1]));
-
-            }
+            onlyHeroes.gameManager.saveGame(args[1]);
+            player.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &aSuccessfully created the game " + args[1]));
 
         }
         else{

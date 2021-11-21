@@ -5,7 +5,6 @@ import me.godnitze.onlyheroes.Listeners.BlockInteract;
 import me.godnitze.onlyheroes.Listeners.PlayerMove;
 import me.godnitze.onlyheroes.Manager.ConfigManager;
 import me.godnitze.onlyheroes.Objects.ArenaInventory;
-import me.godnitze.onlyheroes.Objects.Game;
 import me.godnitze.onlyheroes.Manager.GameManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,9 +14,6 @@ public final class OnlyHeroes extends JavaPlugin {
 
     public GameManager gameManager;
     public CommandManager commandManager;
-    private boolean isSingleServerMode = false;
-
-    private ConfigManager configManager;
 
     public FileConfiguration configFile;
     public FileConfiguration gamesFile;
@@ -46,18 +42,19 @@ public final class OnlyHeroes extends JavaPlugin {
         //SetCommands
         getCommand("oh").setExecutor(commandManager);
 
+
         //Get Config
-         configManager = ConfigManager.getInstance();
+        ConfigManager configManager = ConfigManager.getInstance();
          configFile = configManager.getConfig("config.yml");// Create Config
-         gamesFile = configManager.getConfig("onlyheroes.yml");// Create Config
+         gamesFile = configManager.getConfig("onlyGames.yml");// Create Config
 
         //Add Properties
         configManager.setData(configFile, "single-server-mode",false);
         configManager.setData(configFile, "max-games",-1);
 
-        this.isSingleServerMode = configManager.getBoolean(configFile,"single-server-mode");
+        boolean isSingleServerMode = configManager.getBoolean(configFile, "single-server-mode");
 
-        if (this.isSingleServerMode) { // If we're using single server
+        if (isSingleServerMode) { // If we're using single server
             this.gameManager.gamesLimit = 1;
         } else {
             this.gameManager.gamesLimit = configManager.getInt(configFile,"max-games");
