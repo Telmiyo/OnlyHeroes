@@ -1,14 +1,12 @@
 package me.godnitze.onlyheroes.SubCommands;
 
-import me.godnitze.onlyheroes.Manager.ConfigManager;
 import me.godnitze.onlyheroes.Manager.SubCommand;
 import me.godnitze.onlyheroes.OnlyHeroes;
 import me.godnitze.onlyheroes.utils.ChatUtil;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class RemoveGameCommand extends SubCommand {
-    private OnlyHeroes onlyHeroes = null;
+    private final OnlyHeroes onlyHeroes;
 
     public RemoveGameCommand(OnlyHeroes onlyHeroes){this.onlyHeroes = onlyHeroes;}
 

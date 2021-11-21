@@ -86,7 +86,7 @@ public class ArenaInventory implements Listener {
         p.sendMessage("You clicked at slot " + e.getRawSlot());
         if(clickedItem.getType().equals(Material.GREEN_WOOL)) {
             Game game = onlyHeroes.gameManager.getGame(clickedItem.getItemMeta().getDisplayName());
-            game.joinGame(new GamePlayer(p),game,p);
+            game.joinGame(new GamePlayer(p),p);
         }
     }
 

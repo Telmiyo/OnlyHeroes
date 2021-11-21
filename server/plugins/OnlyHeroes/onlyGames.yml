@@ -1,0 +1,32 @@
+# This is an example structure you will create with using commands on minecraft.
+# games:
+#  example:
+#    displayName: "Game01"
+#    maxPlayers: 32
+#    minPlayers: 24
+#    WorldName: "world"
+#    lobbyPoint: "X:0, Y:0, Z:5"
+#    spawnPoints:
+#      - "X:399, Y:62, Z:236"
+#      - "X:430, Y:68, Z:216"
+#      - "X:447, Y:62, Z:189"
+#      - "X:428, Y:68, Z:157"
+#      - "X:403, Y:62, Z:139"
+#      - "X:372, Y:68, Z:158"
+#      - "X:353, Y:62, Z:187"
+#      - "X:372, Y:68, Z:215"
+games:
+  sg:
+    displayName: sg
+    minPlayers: 1
+    maxPlayers: 5
+    worldName: sg
+    lobbyPoint: X:-17.317321240664942, Y:36.0, Z:19.365491632862117
+    spawnPoints:
+      '0': X:-16.10698707048185, Y:30.0, Z:-2.66985513271712
+      '1': X:-16.10698707048185, Y:30.0, Z:-2.66985513271712
+      '2': X:-16.10698707048185, Y:30.0, Z:-2.66985513271712
+      '3': X:-16.10698707048185, Y:30.0, Z:-2.66985513271712
+      '4': X:-16.10698707048185, Y:30.0, Z:-2.66985513271712
+          
+

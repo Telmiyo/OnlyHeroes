@@ -43,7 +43,9 @@ public class GameManager {
         return true;
     }
 
-    public void saveGame(String gameName){ getGame(gameName).saveConfig(gameName); }
+    public void saveGame(String gameName){
+        getGame(gameName).saveConfig(gameName);
+    }
 
     public Game getGame(String gameName){
 

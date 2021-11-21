@@ -4,16 +4,12 @@ import me.godnitze.onlyheroes.Manager.SubCommand;
 import me.godnitze.onlyheroes.Objects.Game;
 import me.godnitze.onlyheroes.Objects.GamePlayer;
 import me.godnitze.onlyheroes.OnlyHeroes;
-import me.godnitze.onlyheroes.utils.ChatUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-import java.util.Set;
 
 public class LeaveCommand extends SubCommand {
 
-    private OnlyHeroes onlyHeroes = null;
+    private OnlyHeroes onlyHeroes;
 
     public LeaveCommand(OnlyHeroes onlyHeroes){this.onlyHeroes = onlyHeroes;}
     @Override
@@ -35,7 +31,7 @@ public class LeaveCommand extends SubCommand {
     public void perform(Player player, String[] args) {
 
         for(Game games: onlyHeroes.gameManager.getGames()){
-            games.leaveGame(new GamePlayer(player),games);
+            games.leaveGame(new GamePlayer(player));
         }
 
         //Return Player Inv

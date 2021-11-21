@@ -48,7 +48,7 @@ public class JoinCommand extends SubCommand {
 
             GamePlayer gamePlayer = new GamePlayer(player);
 
-            game.joinGame(gamePlayer,game, player);
+            game.joinGame(gamePlayer, player);
 
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
             return;

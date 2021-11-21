@@ -14,7 +14,7 @@ import java.util.*;
 public class Game {
 
     //Classes
-    private OnlyHeroes onlyHeroes;
+    private final OnlyHeroes onlyHeroes;
 
     //Basic Config Options
     private String displayName;
@@ -22,13 +22,13 @@ public class Game {
     private int minPlayers;
     private World world;
     private List<Location> spawnPoints;
-    private List<Location> deathmatchSpawnPoints;
+    private final List<Location> deathmatchSpawnPoints;
     private Location lobbyPoint;
     private boolean isStarted = false;
 
     //Active Game Activation
-    private List<GamePlayer> players;
-    private Set<GamePlayer> spectators;
+    private final List<GamePlayer> players;
+    private final Set<GamePlayer> spectators;
 
     //STATES
     public GameState currentState = GameState.LOBBY;
@@ -42,18 +42,22 @@ public class Game {
         // Initialize Config
         ConfigManager configManager = ConfigManager.getInstance();
         FileConfiguration gamesFile = onlyHeroes.gamesFile;
-        configManager.setData(gamesFile, "games." + gameName + ".displayName", gameName);
-        configManager.setData(gamesFile, "games." + gameName + ".minPlayers",1);
-        configManager.setData(gamesFile, "games." + gameName + ".maxPlayers", 2);
-        configManager.setData(gamesFile, "games." + gameName + ".worldName","world");
-        configManager.setData(gamesFile, "games." + gameName + ".lobbyPoint", "X:0, Y:0, Z:0");
+        if(gamesFile.getString("games." + gameName) == null)
+        {
+            configManager.setData(gamesFile, "games." + gameName + ".displayName", gameName);
+            configManager.setData(gamesFile, "games." + gameName + ".minPlayers",1);
+            configManager.setData(gamesFile, "games." + gameName + ".maxPlayers", 2);
+            configManager.setData(gamesFile, "games." + gameName + ".worldName","world");
+            configManager.setData(gamesFile, "games." + gameName + ".lobbyPoint", "X:0, Y:0, Z:0");
 
-        for(int i = 0; i <= maxPlayers - 1; ++i){
-            configManager.setData(gamesFile, "games." + gameName + ".spawnPoints" + "." + i, "X:0, Y:0, Z:0");
+            for(int i = 0; i <= maxPlayers - 1; ++i){
+                configManager.setData(gamesFile, "games." + gameName + ".spawnPoints" + "." + i, "X:0, Y:0, Z:0");
+            }
+
         }
+        else{ saveConfig(gameName); }
 
         //Initialize Game Values
-        saveConfig(gameName);
 
         this.deathmatchSpawnPoints = new ArrayList<>();
         this.players = new ArrayList<>();
@@ -65,7 +69,6 @@ public class Game {
 
     public void saveConfig(String gameName)
     {
-        ConfigManager configManager = ConfigManager.getInstance();
         FileConfiguration gamesFile = onlyHeroes.gamesFile;
 
         this.displayName = gamesFile.getString("games." + gameName + ".displayName");
@@ -88,7 +91,7 @@ public class Game {
 
         this.spawnPoints = new ArrayList<>();
 
-        String point = null;
+        String point;
         for(int id = 0; id < getMaxPlayers(); ++id){
             point = gamesFile.getString("games." + gameName + ".spawnPoints" + "." + id);
             try {
@@ -153,7 +156,7 @@ public class Game {
         return true;
     }
 
-    public boolean joinGame(GamePlayer gamePlayer, Game game, Player player){
+    public boolean joinGame(GamePlayer gamePlayer, Player player){
 
         if(!isState(GameState.LOBBY))
         {
@@ -161,10 +164,8 @@ public class Game {
             return false;
         }
 
-        for(int i = 0;i < players.size();++i)
-        {
-            if(gamePlayer.getName() == players.get(i).getName())
-            {
+        for (GamePlayer value : players) {
+            if (gamePlayer.getName().equals(value.getName())) {
                 gamePlayer.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &cYou already joined"));
                 return false;
             }
@@ -197,10 +198,10 @@ public class Game {
         return true;
     }
 
-    public boolean leaveGame(GamePlayer gamePlayer, Game game){
+    public boolean leaveGame(GamePlayer gamePlayer){
         for(int i = 0;i < players.size();++i)
         {
-            if(gamePlayer.getName() == players.get(i).getName())
+            if(gamePlayer.getName().equals(players.get(i).getName()))
             {
                 gamePlayer.teleport(players.get(i).getJoinPoint());
                 sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &c" + gamePlayer.getName() + "&c Left the game!"));
@@ -250,14 +251,13 @@ public class Game {
                      spawnPlayers(spawnPoints);
                      this.gameStartCountDown = new GameStartCountDown(this);
                      this.gameStartCountDown.setTimeLeft(15);
-                     this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
                  }
                  else{
                      if(this.gameStartCountDown != null) gameStartCountDown.cancel();
                      this.gameStartCountDown = new GameStartCountDown(this);
                      this.gameStartCountDown.setTimeLeft(35);
-                     this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
                  }
+                this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
 
 
                 break;
@@ -269,17 +269,11 @@ public class Game {
                     setDeathmatchSpawns();
                     spawnPlayers(deathmatchSpawnPoints);
                     setMovementFrozen(true);
-                    if(this.gameStartCountDown != null) gameStartCountDown.cancel();
-                    this.gameStartCountDown = new GameStartCountDown(this);
-                    this.gameStartCountDown.setTimeLeft(10);
-                    this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
                 }
-                else{
-                    if(this.gameStartCountDown != null) gameStartCountDown.cancel();
-                    this.gameStartCountDown = new GameStartCountDown(this);
-                    this.gameStartCountDown.setTimeLeft(10);
-                    this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
-                }
+                if(this.gameStartCountDown != null) gameStartCountDown.cancel();
+                this.gameStartCountDown = new GameStartCountDown(this);
+                this.gameStartCountDown.setTimeLeft(10);
+                this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
 
 
                 break;
@@ -346,7 +340,6 @@ public class Game {
         int currentPlayers = getPlayers().size();
         Random random = new Random();
         Set<Integer> alreadyUsedNumbers = new HashSet<>();
-        int i = 0;
         while (alreadyUsedNumbers.size() < currentPlayers) {
 
             // Número aleatorio entre 0 y 40, excluido el 40.
@@ -356,13 +349,9 @@ public class Game {
             if (!alreadyUsedNumbers.contains(randomNumber)) {
                 alreadyUsedNumbers.add(randomNumber);
                 deathmatchSpawnPoints.add(spawnPoints.get(randomNumber));
-                i++;
             }
 
         }
     }
 
-    public void cleanUp(){
-
-    }
 }
