@@ -29,7 +29,7 @@ public class GameStartCountDown extends BukkitRunnable {
                 case PREINGAME:
                     game.setCurrentState(GameState.INGAME);
                     game.sendMessage(ChatUtil.format("&9OnlyHeroes &7>>&bThe game has begun!"));
-                    game.sendMessage(ChatUtil.format("&9OnlyHeroes &7>>&7[&e30&7]&c seconds until deathmatch!"));
+                    game.sendMessage(ChatUtil.format("&9OnlyHeroes &7>>&7[&e30&7]&c minutes until deathmatch!"));
                     break;
                 case INGAME:
                     game.setCurrentState(GameState.PREDEATHMATCH);

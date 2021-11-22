@@ -2,10 +2,9 @@ package me.godnitze.onlyheroes.Objects;
 
 import me.godnitze.onlyheroes.Manager.ConfigManager;
 import me.godnitze.onlyheroes.Manager.GameState;
+import me.godnitze.onlyheroes.Manager.MessageManager;
 import me.godnitze.onlyheroes.OnlyHeroes;
 import me.godnitze.onlyheroes.Tasks.GameStartCountDown;
-import me.godnitze.onlyheroes.Tasks.LightingTask;
-import me.godnitze.onlyheroes.utils.ChatUtil;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -155,7 +154,7 @@ public class Game {
     public boolean startGame(Player player){
 
         if(!isState(GameState.LOBBY)) {
-            player.sendMessage(ChatUtil.format("&b OnlyHeroes &7>> &c Game already started!"));
+            player.sendMessage(MessageManager.getInstance().getMessageWithPrefix("startedGame"));
             return false;
         }
 
@@ -166,19 +165,19 @@ public class Game {
     public boolean joinGame(GamePlayer gamePlayer, Player player){
         if(!isState(GameState.LOBBY))
         {
-            gamePlayer.sendMessage("Game already started");
+            gamePlayer.sendMessage(MessageManager.getInstance().getMessageWithPrefix("startedGame"));
             return false;
         }
 
         for (GamePlayer value : players) {
             if (gamePlayer.getName().equals(value.getName())) {
-                gamePlayer.sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &cYou already joined"));
+                gamePlayer.sendMessage(MessageManager.getInstance().getMessageWithPrefix("cannotJoin"));
                 return false;
             }
         }
 
         if(getPlayers().size() >= getMaxPlayers()) {
-            gamePlayer.sendMessage("&c[!] This game is full.");
+            gamePlayer.sendMessage(MessageManager.getInstance().getMessageWithPrefix("gameFull"));
             return false;
         }
 
@@ -196,7 +195,7 @@ public class Game {
 
         if(getPlayers().size() == getMinPlayers()){
 
-            sendMessage("&a[*] The game will begin in 10 seconds...");
+            sendMessage(MessageManager.getInstance().getMessageWithPrefix("starting"));
             setCurrentState(GameState.STARTING);
 
         }
@@ -210,16 +209,16 @@ public class Game {
             if(gamePlayer.getName().equals(players.get(i).getName()))
             {
                 gamePlayer.teleport(players.get(i).getJoinPoint());
-                sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &c" + gamePlayer.getName() + "&c Left the game!"));
+                sendMessage(MessageManager.getInstance().getPrefix() + gamePlayer.getName() + MessageManager.getInstance().getMessage("playerLeft"));
                 players.remove(0);
 
-                if(players.size() > 0){ sendMessage("&a[-] &6" + gamePlayer.getName() + " &7(" + getPlayers().size() + "&a/&7" + getMaxPlayers() + ")");}
-                else{ sendMessage("&a[-] &6" + gamePlayer.getName() + " &7(0 &a/&7" + getMaxPlayers() + ")");}
+                if(players.size() > 0){ sendMessage(MessageManager.getInstance().getPrefix() + "&a[-] &6" + gamePlayer.getName() + " &7(" + getPlayers().size() + "&a/&7" + getMaxPlayers() + ")");}
+                else{ sendMessage(MessageManager.getInstance().getPrefix() + "&a[-] &6" + gamePlayer.getName() + " &7(0 &a/&7" + getMaxPlayers() + ")");}
 
                 return true;
             }
         }
-        sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &cYou are not in any game"));
+        sendMessage(MessageManager.getInstance().getMessageWithPrefix("not-in-game-when-leaving"));
 
         return false;
     }
@@ -277,8 +276,8 @@ public class Game {
             case WON:
                 if(this.gameStartCountDown != null) gameStartCountDown.cancel();
                 Bukkit.broadcastMessage("Won State");
-                sendMessage(ChatUtil.format("&aThe games have ended!"));
-                sendMessage(ChatUtil.format("&2<PlayerName>> &ahas won the Survival Games!"));
+                sendMessage(MessageManager.getInstance().getMessageWithPrefix("game-ended"));
+                sendMessage(MessageManager.getInstance().getPrefix() + players.get(0).getName() + MessageManager.getInstance().getMessage("winner"));
 
                 break;
             case RESTARTING:

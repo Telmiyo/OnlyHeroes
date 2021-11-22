@@ -4,6 +4,7 @@ import me.godnitze.onlyheroes.Listeners.AvoidDamage;
 import me.godnitze.onlyheroes.Listeners.BlockInteract;
 import me.godnitze.onlyheroes.Listeners.PlayerMove;
 import me.godnitze.onlyheroes.Manager.ConfigManager;
+import me.godnitze.onlyheroes.Manager.MessageManager;
 import me.godnitze.onlyheroes.Objects.ArenaInventory;
 import me.godnitze.onlyheroes.Manager.GameManager;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,18 +20,19 @@ public final class OnlyHeroes extends JavaPlugin {
     public FileConfiguration gamesFile;
     public ArenaInventory arenaInventory;
 
-
-
     @Override
     public void onEnable() {
         // Plugin startup logic
         System.out.print("OnlyHeroes initialized correctly");
 
         //initialize Managers
-        this.gameManager = new GameManager(this);
-        this.commandManager = new CommandManager(this);
         ConfigManager.getInstance().setPlugin(this);
+        MessageManager.getInstance().setPlugin(this);
+
+        gameManager = new GameManager(this);
         arenaInventory = new ArenaInventory(this);
+        commandManager = new CommandManager(this);
+
 
         //Initialize Listeners
         getServer().getPluginManager().registerEvents(new BlockInteract(this), this);

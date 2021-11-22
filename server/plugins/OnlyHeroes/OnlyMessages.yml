@@ -1,0 +1,42 @@
+# This file is used to configure all the messages from the plugin
+# Don't Change Left Values only text between " "
+# -------------------------------------------------
+# COLOR FORMAT:
+# -------------------------------------------------
+# Black (&0)
+# Dark Blue (&1)
+# Dark Green (&2)
+# Dark Aqua (&3)
+# Dark Red (&4)
+# Dark Purple (&5)
+# Gold (&6)
+# Gray (&7)
+# Dark Gray (&8)
+# Blue (&9)
+# Green (&a)
+# Aqua (&b)
+# Red (&c)
+# Light Purple (&d)
+# Yellow (&e)
+# White (&f)
+# Formats
+# Magic (&k)
+# Bold (&l)
+# Strike (&m)
+# Underline (&n)
+# Italic (&o)
+# Reset (&r)
+# -------------------------------------------------
+
+# General
+prefix: "&6OH &7>> "
+# Games
+join: "Game"
+cannotJoin: "You already joined!"
+startedGame: "Game already started"
+gameFull: "&c[!] This game is full."
+starting: "&a[*] The game will begin in 10 seconds..."
+playerLeft: "&c Left the game!"
+not-in-game-when-leaving: "You are not in any game"
+game-ended: "&aThe games have ended!"
+winner: "&ahas won the Survival Games!"

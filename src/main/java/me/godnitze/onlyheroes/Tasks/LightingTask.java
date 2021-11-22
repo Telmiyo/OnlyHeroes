@@ -43,9 +43,6 @@ public class LightingTask{
         for(GamePlayer p : players){
             Double playerPos = Math.abs(p.getPlayer().getLocation().getX()) + Math.abs(p.getPlayer().getLocation().getZ());
             Double limitPos = (game.getDeathmatchCenter().getX() + radius) + Math.abs(game.getDeathmatchCenter().getZ() + radius);
-            p.getPlayer().sendMessage(ChatUtil.format("&9OnlyHeroes DEBUG &7>> &cPlayer pos X: " + playerPos));
-            p.getPlayer().sendMessage(ChatUtil.format("&9OnlyHeroes DEBUG &7>> &cLimit pos X: " + limitPos));
-            p.getPlayer().sendMessage(ChatUtil.format("&9OnlyHeroes DEBUG &7>> &cRadius: " + radius));
 
             if(playerPos >= limitPos){
                  p.getPlayer().getWorld().strikeLightningEffect(p.getPlayer().getLocation());
