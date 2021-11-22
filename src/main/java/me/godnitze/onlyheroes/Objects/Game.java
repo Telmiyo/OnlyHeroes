@@ -26,6 +26,7 @@ public class Game {
     private final List<Location> deathmatchSpawnPoints;
     private Location lobbyPoint;
     private boolean isStarted = false;
+    private Location deathmatchCenter;
 
     //Active Game Activation
     private final List<GamePlayer> players;
@@ -50,6 +51,7 @@ public class Game {
             configManager.setData(gamesFile, "games." + gameName + ".maxPlayers", 2);
             configManager.setData(gamesFile, "games." + gameName + ".worldName","world");
             configManager.setData(gamesFile, "games." + gameName + ".lobbyPoint", "X:0, Y:0, Z:0");
+            configManager.setData(gamesFile, "games." + gameName + ".deathmatchCenter", "X:0, Y:0, Z:0");
 
             for(int i = 0; i <= maxPlayers - 1; ++i){
                 configManager.setData(gamesFile, "games." + gameName + ".spawnPoints" + "." + i, "X:0, Y:0, Z:0");
@@ -63,7 +65,7 @@ public class Game {
         this.deathmatchSpawnPoints = new ArrayList<>();
         this.players = new ArrayList<>();
         this.spectators = new HashSet<>();
-        this.gameStartCountDown = new GameStartCountDown(this);
+        this.gameStartCountDown = new GameStartCountDown(onlyHeroes,this);
         this.gameStartCountDown.setTimeLeft(20);
 
 
@@ -92,6 +94,16 @@ public class Game {
             onlyHeroes.getLogger().severe("Failed to load lobbyPoint with metadata " + gamesFile.getString("games." + gameName + ".lobbyPoint") + " for gameName: '" + gameName + "'. ExceptionType: " + ex);
         }
 
+        try {
+            String[] values = gamesFile.getString( "games." + gameName + ".deathmatchCenter").split(","); // [X:0, Y:0, Z:0]
+            double x = Double.parseDouble(values[0].split(":")[1]); // X:0 -> X, 0 -> 0
+            double y = Double.parseDouble(values[1].split(":")[1]);
+            double z = Double.parseDouble(values[2].split(":")[1]);
+            deathmatchCenter = new Location(world, x, y, z);
+        } catch (Exception ex) {
+            onlyHeroes.getLogger().severe("Failed to load lobbyPoint with metadata " + gamesFile.getString("games." + gameName + ".lobbyPoint") + " for gameName: '" + gameName + "'. ExceptionType: " + ex);
+        }
+
         this.spawnPoints = new ArrayList<>();
 
         String point;
@@ -110,19 +122,15 @@ public class Game {
         }
     }
 
-    public int getMaxPlayers() {
-        return maxPlayers;
-    }
+    public int getMaxPlayers() { return maxPlayers; }
 
-    public int getMinPlayers() {
-        return minPlayers;
-    }
+    public int getMinPlayers() { return minPlayers; }
 
     public World getWorld() { return world; }
 
-    public String getDisplayName() {
-        return displayName;
-    }
+    public String getDisplayName() { return displayName; }
+
+    public Location getDeathmatchCenter() { return deathmatchCenter; }
 
     public boolean isStarted() { return isStarted; }
 
@@ -130,13 +138,9 @@ public class Game {
 
     public List<Location> getSpawnPoints() { return spawnPoints; }
 
-    public List<GamePlayer> getPlayers() {
-        return players;
-    }
+    public List<GamePlayer> getPlayers() { return players; }
 
-    public Set<GamePlayer> getSpectators() {
-        return spectators;
-    }
+    public Set<GamePlayer> getSpectators() { return spectators; }
 
     public GameState getCurrentState(){
         return this.currentState;
@@ -240,7 +244,6 @@ public class Game {
                 Bukkit.broadcastMessage("Starting State");
                 //Timer on chat
                 this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
-                LightingTask lightingTask = new LightingTask(onlyHeroes,players);
                 break;
             case PREINGAME:
                 //Spawn players randomly
@@ -263,14 +266,12 @@ public class Game {
                 setMovementFrozen(true);;
                 this.gameStartCountDown.setTimeLeft(10);
 
-
-
                 break;
             case DEATHMATCH:
                 Bukkit.broadcastMessage("Deathmatch State");
                 // TODO TP & start Cooldown
                 setMovementFrozen(false);
-                this.gameStartCountDown.setTimeLeft(10);
+                this.gameStartCountDown.setTimeLeft(120);
 
                 break;
             case WON:

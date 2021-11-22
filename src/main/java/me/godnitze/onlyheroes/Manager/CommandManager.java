@@ -30,6 +30,7 @@ public class CommandManager implements CommandExecutor {
         subcommands.add(new SaveGameCommand(onlyHeroes));
         subcommands.add(new ListGameCommand(onlyHeroes));
         subcommands.add(new RemoveGameCommand(onlyHeroes));
+        subcommands.add(new SetDeathmatchCenter(onlyHeroes));
     }
 
     @Override

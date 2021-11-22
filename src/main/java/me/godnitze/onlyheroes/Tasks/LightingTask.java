@@ -1,33 +1,36 @@
 package me.godnitze.onlyheroes.Tasks;
+import me.godnitze.onlyheroes.Manager.GameState;
+import me.godnitze.onlyheroes.Objects.Game;
 import me.godnitze.onlyheroes.Objects.GamePlayer;
 import me.godnitze.onlyheroes.OnlyHeroes;
-import org.bukkit.entity.LightningStrike;
-import org.bukkit.entity.Player;
+import me.godnitze.onlyheroes.utils.ChatUtil;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
 public class LightingTask{
-    private final int minRadius = 0;
-    private final int maxRadius = 0;
+    private int radius = 25;
     private final OnlyHeroes plugin;
     private final List<GamePlayer> players;
-    public LightingTask(OnlyHeroes plugin, List<GamePlayer> players)
+    private final Game game;
+    public LightingTask(OnlyHeroes plugin, Game game)
     {
         this.plugin = plugin;
-        this.players = players;
+        this.game = game;
+        this.players = game.getPlayers();
         new BukkitRunnable() {
-            int timeLeft = 6;
+        int timeLeft = 6;
             @Override
             public void run() {
-                System.out.println("LIGHTING STAETED" + Integer.toString(timeLeft));
+                if(game.isState(GameState.WON))
+                {
+                    cancel();
+                    return;
+                }
                 timeLeft--;
                 if (timeLeft == 0) {
                    timeLeft = 6;
-                   //TODO IF PLAYER IS IN THE AREA, STRIKE
-
-                    System.out.println("STRIKE");
-                    CheckDamage();
+                   CheckDamage();
                     return;
                 }
             }
@@ -38,16 +41,21 @@ public class LightingTask{
     public void CheckDamage()
     {
         for(GamePlayer p : players){
-           p.getPlayer().getWorld().strikeLightning(p.getPlayer().getLocation());
+            Double playerPos = Math.abs(p.getPlayer().getLocation().getX()) + Math.abs(p.getPlayer().getLocation().getZ());
+            Double limitPos = (game.getDeathmatchCenter().getX() + radius) + Math.abs(game.getDeathmatchCenter().getZ() + radius);
+            p.getPlayer().sendMessage(ChatUtil.format("&9OnlyHeroes DEBUG &7>> &cPlayer pos X: " + playerPos));
+            p.getPlayer().sendMessage(ChatUtil.format("&9OnlyHeroes DEBUG &7>> &cLimit pos X: " + limitPos));
+            p.getPlayer().sendMessage(ChatUtil.format("&9OnlyHeroes DEBUG &7>> &cRadius: " + radius));
+
+            if(playerPos >= limitPos){
+                 p.getPlayer().getWorld().strikeLightningEffect(p.getPlayer().getLocation());
+                 p.getPlayer().damage(2.5);
+                 p.getPlayer().sendMessage(ChatUtil.format("&9OnlyHeroes &7>> &cPlease return to spawn! "));
+            }
         }
-    }
-    public void Damage(Player player)
-    {
-
-
     }
 
     public void ReduceSpace(){}
-
+    public void setRadius(int value){radius = value;}
 
 }

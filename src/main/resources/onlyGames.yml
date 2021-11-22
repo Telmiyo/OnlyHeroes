@@ -1,11 +1,12 @@
 # This is an example structure you will create with using commands on minecraft.
 # games:
 #  example:
-#    displayName: "Game01"
+#    displayName: "Example"
 #    maxPlayers: 32
 #    minPlayers: 24
 #    WorldName: "world"
-#    lobbyPoint: "X:0, Y:0, Z:5"
+#    lobbyPoint: "X:0, Y:0, Z:0"
+#    stormCenter: "X:0, Y:0, Z:0"
 #    spawnPoints:
 #      - "X:399, Y:62, Z:236"
 #      - "X:430, Y:68, Z:216"
