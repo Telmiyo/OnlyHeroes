@@ -16,19 +16,18 @@ public class AvoidDamage implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageEvent event){
-
         if(event.getEntity() instanceof  Player){
             Player player = (Player) event.getEntity();
-
             Game game = onlyHeroes.gameManager.GetGameFromPlayer(player);
             if(game != null){
-                if(!game.isState(GameState.INGAME) || !game.isState(GameState.DEATHMATCH))
-                {
+                // True = No Damage; False = Damage;
+                if(game.isState(GameState.INGAME) ||  game.isState(GameState.DEATHMATCH)){
+                    event.setCancelled(false);
+                }
+                else{
                     event.setCancelled(true);
                 }
-
             }
-
         }
 
     }

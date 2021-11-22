@@ -3,11 +3,10 @@ package me.godnitze.onlyheroes.Tasks;
 import me.godnitze.onlyheroes.Manager.GameState;
 import me.godnitze.onlyheroes.Objects.Game;
 import me.godnitze.onlyheroes.utils.ChatUtil;
-import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class GameStartCountDown extends BukkitRunnable {
-    private Game game;
+    private final Game game;
 
     public GameStartCountDown(Game game){ this.game = game; }
     private int timeLeft = 10;
@@ -16,7 +15,6 @@ public class GameStartCountDown extends BukkitRunnable {
     public void run() {
         --timeLeft;
         if(timeLeft < 0){
-            cancel();
             switch (game.getCurrentState()){
                 case STARTING:
                     game.setCurrentState(GameState.PREINGAME);
@@ -42,7 +40,6 @@ public class GameStartCountDown extends BukkitRunnable {
                     game.setCurrentState(GameState.WON);
                     break;
             }
-            return;
         }
 
         // Messages System

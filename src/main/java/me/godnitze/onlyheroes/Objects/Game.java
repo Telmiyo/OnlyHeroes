@@ -4,6 +4,7 @@ import me.godnitze.onlyheroes.Manager.ConfigManager;
 import me.godnitze.onlyheroes.Manager.GameState;
 import me.godnitze.onlyheroes.OnlyHeroes;
 import me.godnitze.onlyheroes.Tasks.GameStartCountDown;
+import me.godnitze.onlyheroes.Tasks.LightingTask;
 import me.godnitze.onlyheroes.utils.ChatUtil;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -64,6 +65,8 @@ public class Game {
         this.spectators = new HashSet<>();
         this.gameStartCountDown = new GameStartCountDown(this);
         this.gameStartCountDown.setTimeLeft(20);
+
+
 
     }
 
@@ -157,7 +160,6 @@ public class Game {
     }
 
     public boolean joinGame(GamePlayer gamePlayer, Player player){
-
         if(!isState(GameState.LOBBY))
         {
             gamePlayer.sendMessage("Game already started");
@@ -184,7 +186,7 @@ public class Game {
         sendMessage("&a[+] &6" + gamePlayer.getName() + " &7(" + getPlayers().size() + "&a/&7" + getMaxPlayers() + ")");
 
         //TODO SAVE INVENTORY
-        gamePlayer.getPlayer().setGameMode(GameMode.CREATIVE);
+        gamePlayer.getPlayer().setGameMode(GameMode.SURVIVAL);
         //gamePlayer.getPlayer().setGameMode(gamePlayer.getPlayer().getMaxHealth());
         gamePlayer.getPlayer().getInventory().setArmorContents(null);
 
@@ -238,50 +240,41 @@ public class Game {
                 Bukkit.broadcastMessage("Starting State");
                 //Timer on chat
                 this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
-
+                LightingTask lightingTask = new LightingTask(onlyHeroes,players);
                 break;
             case PREINGAME:
-                if(this.gameStartCountDown != null) gameStartCountDown.cancel();
                 //Spawn players randomly
                 //Start CountDown
                 setMovementFrozen(true);
                 spawnPlayers(spawnPoints);
-                this.gameStartCountDown = new GameStartCountDown(this);
                 this.gameStartCountDown.setTimeLeft(15);
-                this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
 
                 break;
             case INGAME:
                 Bukkit.broadcastMessage("Ingame State");
                 setMovementFrozen(false);
-                if(this.gameStartCountDown != null) gameStartCountDown.cancel();
-                this.gameStartCountDown = new GameStartCountDown(this);
                 this.gameStartCountDown.setTimeLeft(35);
-                this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
 
                 break;
             case PREDEATHMATCH:
                 Bukkit.broadcastMessage("PreDeathmatch State");
                 setDeathmatchSpawns();
                 spawnPlayers(deathmatchSpawnPoints);
-                setMovementFrozen(true);
-                if(this.gameStartCountDown != null) gameStartCountDown.cancel();
-                this.gameStartCountDown = new GameStartCountDown(this);
+                setMovementFrozen(true);;
                 this.gameStartCountDown.setTimeLeft(10);
-                this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
+
+
 
                 break;
             case DEATHMATCH:
                 Bukkit.broadcastMessage("Deathmatch State");
                 // TODO TP & start Cooldown
                 setMovementFrozen(false);
-                if(this.gameStartCountDown != null) gameStartCountDown.cancel();
-                this.gameStartCountDown = new GameStartCountDown(this);
                 this.gameStartCountDown.setTimeLeft(10);
-                this.gameStartCountDown.runTaskTimer(onlyHeroes,0,20L);
 
                 break;
             case WON:
+                if(this.gameStartCountDown != null) gameStartCountDown.cancel();
                 Bukkit.broadcastMessage("Won State");
                 sendMessage(ChatUtil.format("&aThe games have ended!"));
                 sendMessage(ChatUtil.format("&2<PlayerName>> &ahas won the Survival Games!"));
