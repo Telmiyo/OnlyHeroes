@@ -1,34 +1,19 @@
 # OnlyHeroes
-![](screenshots/logo.png)
 
-OnlyHeroes is a very simple minigame, born as an idea in which 10 players enter a game and face randomly in a 1vs1, each round consists of a different style of pvp, different kits each round. Once there are 4 people left , they will get together in a deatmach so that the winner comes out.
+<img src="screenshots/oh.png"
+     alt="onlyheroes"
+     style="display:block; margin-left: auto; margin-right: auto; width: 10%;" />
 
-This minigame is aimed at minecraft pvp lovers. Where they will have to show their skills in different styles of pvp in a single minigame.
+OnlyHeroes is a simple and fun Hunger Games plugin for Minecraft. It is inspired on the big and loved server MCSG which was known by its famous and competitive Hunger Games stand by the old pvp style. Unfortunatelly, this server closed some years ago. So here OnlyHeroes comes, to let new servers introduce this plugin and have an oportunity to revive this great community.
  
-## MAIN OBJECTIVE
+## FEATURES
 
-- [ ] Create Different Games
-- [ ] Scoreboard
-- [ ] Economy
-- [ ] Leader-board
-- [ ] Join by Signs
-
-## FUTURE OBJECTIVE
-
-- [ ] Set Personalized Kits on a Game
-- [ ] Configurable Game Config File
-- [ ] Editable Kit Config File
-- [ ] BossBar Compatibility
-
-## COMMANDS
-
-- User - onlyheroes.user
-  - join
-  - leave
-- Admin - onlyheroes.admin
-  - setlobbyspawn
-  - setplayerspawn
-  - setdetmacthspawn
-  - creategame
-  - startgame
-
+- [ ] Create Multiple Arenas and let players see them with a UI.
+- [ ] Customizable Arenas(min, max, map list, spawns, deathmatch spawn...)
+- [ ] Simple Arena Setup
+- [ ] Highly Configurable
+- [ ] Configurable Scoreboard
+- [ ] Configurable Chest Config
+- [ ] Economy compatible with Vault
+- [ ] Leader-board with Database
+- [ ] Join by Signs 
