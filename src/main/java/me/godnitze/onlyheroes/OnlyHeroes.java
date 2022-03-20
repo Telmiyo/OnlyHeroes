@@ -54,13 +54,7 @@ public final class OnlyHeroes extends JavaPlugin {
         configManager.setData(configFile, "single-server-mode",false);
         configManager.setData(configFile, "max-games",-1);
 
-        boolean isSingleServerMode = configManager.getBoolean(configFile, "single-server-mode");
-
-        if (isSingleServerMode) { // If we're using single server
-            this.gameManager.gamesLimit = 1;
-        } else {
-            this.gameManager.gamesLimit = configManager.getInt(configFile,"max-games");
-        }
+        this.gameManager.gamesLimit = configManager.getInt(configFile,"max-games");
 
     }
 

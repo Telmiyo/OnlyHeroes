@@ -15,6 +15,7 @@ public class Game {
 
     //Classes
     private final OnlyHeroes onlyHeroes;
+    private final MessageManager messageManager;
 
     //Basic Config Options
     private String displayName;
@@ -39,6 +40,7 @@ public class Game {
     //Constructor
     public Game(String gameName, OnlyHeroes onlyHeroes){
         this.onlyHeroes = onlyHeroes;
+        this.messageManager = MessageManager.getInstance();
 
         // Initialize Config
         ConfigManager configManager = ConfigManager.getInstance();
@@ -154,7 +156,7 @@ public class Game {
     public boolean startGame(Player player){
 
         if(!isState(GameState.LOBBY)) {
-            player.sendMessage(MessageManager.getInstance().getMessageWithPrefix("startedGame"));
+            player.sendMessage(messageManager.getMessage(true, "startedGame"));
             return false;
         }
 
@@ -165,19 +167,19 @@ public class Game {
     public boolean joinGame(GamePlayer gamePlayer, Player player){
         if(!isState(GameState.LOBBY))
         {
-            gamePlayer.sendMessage(MessageManager.getInstance().getMessageWithPrefix("startedGame"));
+            gamePlayer.sendMessage(messageManager.getMessage(true, "startedGame"));
             return false;
         }
 
         for (GamePlayer value : players) {
             if (gamePlayer.getName().equals(value.getName())) {
-                gamePlayer.sendMessage(MessageManager.getInstance().getMessageWithPrefix("cannotJoin"));
+                gamePlayer.sendMessage(messageManager.getMessage(true, "cannotJoin"));
                 return false;
             }
         }
 
         if(getPlayers().size() >= getMaxPlayers()) {
-            gamePlayer.sendMessage(MessageManager.getInstance().getMessageWithPrefix("gameFull"));
+            gamePlayer.sendMessage(messageManager.getMessage(true, "gameFull"));
             return false;
         }
 
@@ -195,7 +197,7 @@ public class Game {
 
         if(getPlayers().size() == getMinPlayers()){
 
-            sendMessage(MessageManager.getInstance().getMessageWithPrefix("starting"));
+            sendMessage(messageManager.getMessage(true, "starting"));
             setCurrentState(GameState.STARTING);
 
         }
@@ -209,16 +211,16 @@ public class Game {
             if(gamePlayer.getName().equals(players.get(i).getName()))
             {
                 gamePlayer.teleport(players.get(i).getJoinPoint());
-                sendMessage(MessageManager.getInstance().getPrefix() + gamePlayer.getName() + MessageManager.getInstance().getMessage("playerLeft"));
+                sendMessage(messageManager.getPrefix() + gamePlayer.getName() + messageManager.getMessage(false, "playerLeft"));
                 players.remove(0);
 
-                if(players.size() > 0){ sendMessage(MessageManager.getInstance().getPrefix() + "&a[-] &6" + gamePlayer.getName() + " &7(" + getPlayers().size() + "&a/&7" + getMaxPlayers() + ")");}
-                else{ sendMessage(MessageManager.getInstance().getPrefix() + "&a[-] &6" + gamePlayer.getName() + " &7(0 &a/&7" + getMaxPlayers() + ")");}
+                if(players.size() > 0){ sendMessage(messageManager.getPrefix() + "&a[-] &6" + gamePlayer.getName() + " &7(" + getPlayers().size() + "&a/&7" + getMaxPlayers() + ")");}
+                else{ sendMessage(messageManager.getPrefix() + "&a[-] &6" + gamePlayer.getName() + " &7(0 &a/&7" + getMaxPlayers() + ")");}
 
                 return true;
             }
         }
-        sendMessage(MessageManager.getInstance().getMessageWithPrefix("not-in-game-when-leaving"));
+        sendMessage(messageManager.getMessage(true, "not-in-game-when-leaving"));
 
         return false;
     }
@@ -276,8 +278,8 @@ public class Game {
             case WON:
                 if(this.gameStartCountDown != null) gameStartCountDown.cancel();
                 Bukkit.broadcastMessage("Won State");
-                sendMessage(MessageManager.getInstance().getMessageWithPrefix("game-ended"));
-                sendMessage(MessageManager.getInstance().getPrefix() + players.get(0).getName() + MessageManager.getInstance().getMessage("winner"));
+                sendMessage(messageManager.getMessage(true, "game-ended"));
+                sendMessage(messageManager.getPrefix() + players.get(0).getName() + messageManager.getMessage(false, "winner"));
 
                 break;
             case RESTARTING:
@@ -342,10 +344,8 @@ public class Game {
         Set<Integer> alreadyUsedNumbers = new HashSet<>();
         while (alreadyUsedNumbers.size() < currentPlayers) {
 
-            // Número aleatorio entre 0 y 40, excluido el 40.
             int randomNumber = random.nextInt(currentPlayers);
 
-            // Si no lo hemos usado ya, lo usamos y lo metemos en el conjunto de usados.
             if (!alreadyUsedNumbers.contains(randomNumber)) {
                 alreadyUsedNumbers.add(randomNumber);
                 deathmatchSpawnPoints.add(spawnPoints.get(randomNumber));
